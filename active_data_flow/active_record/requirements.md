@@ -4,6 +4,11 @@
 
 This document specifies the requirements for the `active_data_flow-active_record` gem, which provides Sink implementation for writing data to Rails database tables using ActiveRecord.
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides Sink base class
+
+This connector gem extends the core `active_data_flow` gem with database writing capabilities, leveraging Rails ActiveRecord for ORM functionality.
+
 ## Glossary
 
 - **ActiveRecord**: Rails ORM for database access

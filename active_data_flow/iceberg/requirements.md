@@ -4,6 +4,12 @@
 
 This document specifies the requirements for the `active_data_flow-iceberg` gem, which provides Source and Sink implementations for Apache Iceberg table format.
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides Source and Sink base classes
+- `active_data_flow-source_support` (optional) - Enables split-based parallel table reading
+
+This connector gem extends the core `active_data_flow` gem with Apache Iceberg table capabilities, supporting both simple source/sink patterns and advanced split-based parallel processing.
+
 ## Glossary
 
 - **Iceberg**: Apache Iceberg open table format for large analytic datasets

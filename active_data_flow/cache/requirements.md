@@ -4,6 +4,11 @@
 
 This document specifies the requirements for the `active_data_flow-cache` gem, which provides Sink implementation for writing data to Rails cache (Redis, Memcached, etc.).
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides Sink base class
+
+This connector gem extends the core `active_data_flow` gem with caching capabilities, leveraging Rails cache abstraction for multiple backend support.
+
 ## Glossary
 
 - **Cache**: Rails cache store (Redis, Memcached, Memory, etc.)

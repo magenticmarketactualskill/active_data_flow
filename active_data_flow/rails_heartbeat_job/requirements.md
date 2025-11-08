@@ -4,6 +4,12 @@
 
 This document specifies the requirements for the `active_data_flow-rails_heartbeat_job` gem, which provides asynchronous DataFlow execution using ActiveJob background jobs.
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides DataFlow module and base classes
+- `active_data_flow-rails_heartbeat_app` - Extends with asynchronous execution
+
+This runtime gem extends the `active_data_flow-rails_heartbeat_app` gem by replacing synchronous execution with asynchronous ActiveJob-based execution.
+
 ## Glossary
 
 - **DataFlowRunJob**: An ActiveJob that executes a DataFlow asynchronously

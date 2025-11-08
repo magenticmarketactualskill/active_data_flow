@@ -4,6 +4,11 @@
 
 This document specifies the requirements for the `active_data_flow-aws_lambda` gem, which provides a runtime for executing DataFlows as AWS Lambda functions.
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides DataFlow module and base classes
+
+This runtime gem extends the core `active_data_flow` gem with serverless execution capabilities on AWS Lambda, enabling event-driven DataFlow processing.
+
 ## Glossary
 
 - **Lambda Function**: An AWS Lambda function that executes a DataFlow

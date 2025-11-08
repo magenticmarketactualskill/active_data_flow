@@ -68,14 +68,45 @@ Each gem has its own `requirements.md` file specifying:
 ## Dependencies
 
 ```
-Core Gem (no dependencies)
-    ↓
-Runtime Gems (depend on core)
-    ↓
-Connector Gems (depend on core, optionally on source_support)
-    ↓
-Application (depends on core + selected runtime + selected connectors)
+active_data_flow (core)
+├── active_data_flow-source_support
+│   ├── active_data_flow-rafka (split-based)
+│   ├── active_data_flow-file (split-based)
+│   ├── active_data_flow-iceberg (split-based)
+│   └── active_data_flow-flink (uses splits)
+│
+├── Runtime Gems
+│   ├── active_data_flow-rails_heartbeat_app
+│   │   └── active_data_flow-rails_heartbeat_job (extends app)
+│   ├── active_data_flow-aws_lambda
+│   └── active_data_flow-flink
+│
+└── Connector Gems
+    ├── active_data_flow-rafka
+    ├── active_data_flow-active_record
+    ├── active_data_flow-cache
+    ├── active_data_flow-file
+    └── active_data_flow-iceberg
+
+Application
+└── Depends on: core + runtime + connectors
 ```
+
+### Dependency Matrix
+
+| Gem | Depends On |
+|-----|------------|
+| `active_data_flow` | (none) |
+| `active_data_flow-source_support` | core |
+| `active_data_flow-rails_heartbeat_app` | core |
+| `active_data_flow-rails_heartbeat_job` | core, rails_heartbeat_app |
+| `active_data_flow-aws_lambda` | core |
+| `active_data_flow-flink` | core, source_support |
+| `active_data_flow-rafka` | core, source_support (optional) |
+| `active_data_flow-active_record` | core |
+| `active_data_flow-cache` | core |
+| `active_data_flow-file` | core, source_support (optional) |
+| `active_data_flow-iceberg` | core, source_support (optional) |
 
 ## Example Usage
 

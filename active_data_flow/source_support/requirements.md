@@ -4,6 +4,11 @@
 
 This document specifies the requirements for the `active_data_flow-source_support` gem, which implements Flink-inspired split-based source architecture for parallel data ingestion.
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides base Source class and plugin registry
+
+This gem extends the core `active_data_flow` gem with split-based source capabilities, enabling parallel data ingestion with work distribution across multiple readers.
+
 ## Glossary
 
 - **Split**: A portion of a data source that can be processed independently

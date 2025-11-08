@@ -4,6 +4,11 @@
 
 This document specifies the requirements for the `active_data_flow-rails_heartbeat_app` gem, which provides a heartbeat-triggered execution model for DataFlows running in the Rails application process.
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides DataFlow module and base classes
+
+This runtime gem extends the core `active_data_flow` gem with synchronous execution capabilities in the Rails application process, triggered by periodic heartbeat HTTP requests.
+
 ## Glossary
 
 - **Heartbeat**: A periodic HTTP request that triggers DataFlow execution

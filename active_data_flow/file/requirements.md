@@ -4,6 +4,12 @@
 
 This document specifies the requirements for the `active_data_flow-file` gem, which provides Source and Sink implementations for reading and writing files in various formats.
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides Source and Sink base classes
+- `active_data_flow-source_support` (optional) - Enables split-based parallel file processing
+
+This connector gem extends the core `active_data_flow` gem with file I/O capabilities, supporting CSV, JSON, and other formats with optional parallel processing.
+
 ## Glossary
 
 - **File Source**: A source that reads data from local or remote files

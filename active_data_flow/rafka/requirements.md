@@ -4,6 +4,12 @@
 
 This document specifies the requirements for the `active_data_flow-rafka` gem, which provides Source and Sink implementations for Rafka (Kafka-compatible API backed by Redis streams).
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides Source and Sink base classes
+- `active_data_flow-source_support` (optional) - Enables split-based parallel reading
+
+This connector gem extends the core `active_data_flow` gem with Rafka streaming capabilities, supporting both simple source/sink patterns and advanced split-based parallel processing.
+
 ## Glossary
 
 - **Rafka**: A Kafka-compatible API backed by Redis streams

@@ -4,6 +4,12 @@
 
 This document specifies the requirements for the `active_data_flow-flink` gem, which provides a runtime for executing DataFlows in Apache Flink.
 
+**Dependencies:**
+- `active_data_flow` (core) - Provides DataFlow module, Source, and Sink base classes
+- `active_data_flow-source_support` - Leverages split-based architecture for Flink integration
+
+This runtime gem extends the core `active_data_flow` gem with distributed execution capabilities on Apache Flink, enabling scalable stream and batch processing.
+
 ## Glossary
 
 - **Flink**: Apache Flink distributed stream processing framework

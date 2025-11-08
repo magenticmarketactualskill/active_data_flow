@@ -4,6 +4,24 @@
 
 This document specifies the requirements for the `active_data_flow` core gem, which provides abstract interfaces and base classes for distributed stream processing. The core gem is implementation-independent and defines the contracts that runtime and connector implementations must follow.
 
+The core gem is extended by the following subcomponent gems:
+
+**Framework Extensions:**
+- `active_data_flow-source_support` - Flink-inspired split-based source architecture
+
+**Runtime Implementations:**
+- `active_data_flow-rails_heartbeat_app` - Synchronous execution in Rails app process
+- `active_data_flow-rails_heartbeat_job` - Asynchronous execution via ActiveJob
+- `active_data_flow-aws_lambda` - Serverless execution on AWS Lambda
+- `active_data_flow-flink` - Distributed execution on Apache Flink
+
+**Connector Implementations:**
+- `active_data_flow-rafka` - Kafka-compatible Redis streams source/sink
+- `active_data_flow-active_record` - Rails database table sink
+- `active_data_flow-cache` - Rails cache sink
+- `active_data_flow-file` - File source/sink (CSV, JSON)
+- `active_data_flow-iceberg` - Apache Iceberg table source/sink
+
 ## Glossary
 
 - **ActiveDataFlow**: The core Ruby gem providing abstract interfaces and base classes
@@ -12,6 +30,7 @@ This document specifies the requirements for the `active_data_flow` core gem, wh
 - **Sink**: An abstraction for writing data to external systems
 - **Runtime**: The execution environment for DataFlows
 - **Plugin**: A separate gem that extends ActiveDataFlow with concrete implementations
+- **Subcomponent**: A gem that depends on and extends the core gem
 
 ## Requirements
 
@@ -110,3 +129,15 @@ This document specifies the requirements for the `active_data_flow` core gem, wh
 3. WHEN a plugin is loaded, THE ActiveDataFlow SHALL verify version compatibility
 4. THE ActiveDataFlow SHALL raise an error for incompatible plugin versions
 5. THE ActiveDataFlow SHALL support semantic versioning for compatibility checks
+
+### Requirement 9: Subcomponent Integration
+
+**User Story:** As a gem maintainer, I want seamless subcomponent integration, so that runtime and connector gems work together correctly.
+
+#### Acceptance Criteria
+
+1. THE ActiveDataFlow SHALL provide a registration API for subcomponents
+2. THE ActiveDataFlow SHALL validate subcomponent dependencies on core version
+3. THE ActiveDataFlow SHALL allow subcomponents to extend core functionality
+4. THE ActiveDataFlow SHALL maintain a registry of loaded subcomponents
+5. THE ActiveDataFlow SHALL provide introspection of available runtimes and connectors
