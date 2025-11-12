@@ -3,6 +3,7 @@
 require_relative "active_data_flow/version"
 require_relative "active_data_flow/errors"
 require_relative "active_data_flow/configuration"
+require_relative "active_data_flow/message"
 require_relative "active_data_flow/logger"
 require_relative "active_data_flow/source"
 require_relative "active_data_flow/sink"

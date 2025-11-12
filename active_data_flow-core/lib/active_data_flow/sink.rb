@@ -19,10 +19,10 @@ module ActiveDataFlow
       )
     end
 
-    # Abstract method to write a single record
+    # Abstract method to write a single message
     # Must be implemented by subclasses
-    # @param record [Object] the record to write
-    def write(record)
+    # @param message [ActiveDataFlow::Message] the message to write
+    def write(message)
       raise NotImplementedError, "#{self.class}#write must be implemented"
     end
 

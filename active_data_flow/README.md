@@ -6,6 +6,12 @@ This directory contains the specifications for the ActiveDataFlow gem suite, a m
 
 ActiveDataFlow follows a plugin-based architecture where the core gem provides abstract interfaces, and separate gems provide concrete implementations.
 
+Each dataflow source or sink references a 'message' which is an instance of ActiveDataFlow::Message
+
+ActiveDataFlow::Message::Unconstrained
+ActiveDataFlow::Message::CloudEvent: [CloudEvents](https://cloudevents.io/)
+ActiveDataFlow::Message::CloudEventLd: [CloudEventsLd](https://github.com/magenticmarketactualskill/cloudeventsld)
+
 ```
 active_data_flow (core)
 ├── Runtime Implementations

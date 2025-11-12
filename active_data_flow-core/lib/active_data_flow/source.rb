@@ -19,9 +19,9 @@ module ActiveDataFlow
       )
     end
 
-    # Abstract method to iterate over records
+    # Abstract method to iterate over messages
     # Must be implemented by subclasses
-    # @yield [Object] each record from the source
+    # @yield [ActiveDataFlow::Message] each message from the source
     def each(&block)
       raise NotImplementedError, "#{self.class}#each must be implemented"
     end
