@@ -10,6 +10,18 @@ The `submoduler.rb` script provides a `report` command that validates git submod
 
 The design uses a modular architecture with separate validator classes for each check type, coordinated by a report generator that produces formatted output.
 
+### Design Principles
+
+**`.gitmodules` as Source of Truth**: The tool treats `.gitmodules` as the authoritative source for submodule configuration. All validation is based on what is defined in this file, not on git's internal state or commands. This approach:
+- Provides a single, reliable reference point
+- Enables validation without requiring git commands
+- Makes the tool more portable and testable
+- Allows detection of configuration drift between `.gitmodules` and actual state
+
+**Fail Fast on Malformed Entries**: When `.gitmodules` contains syntax errors or malformed entries, the tool immediately raises an error with diagnostic information. This prevents processing invalid configuration and ensures developers fix issues at the source.
+
+**Comprehensive Validation**: The tool collects all validation results before reporting, allowing developers to see all issues at once rather than fixing them one at a time.
+
 ## Architecture
 
 ### Component Diagram
@@ -67,11 +79,20 @@ end
 ```
 
 **Behavior**:
-- Validates that script is run from a git repository
+- Detects repository root by searching for `.git` directory
+- Searches current directory and parent directories up to filesystem root
+- Validates that script is run from within a git repository
 - Parses command line arguments
 - Routes to `ReportCommand` when `report` is specified
 - Displays usage information for invalid commands
-- Returns appropriate exit codes
+- Returns appropriate exit codes (0, 1, or 2)
+
+**Repository Root Detection Algorithm**:
+1. Start with current working directory
+2. Check if `.git` directory exists
+3. If not found, move to parent directory
+4. Repeat until `.git` is found or filesystem root is reached
+5. If `.git` not found, raise "not a git repository" error
 
 ### 2. GitModulesParser
 
@@ -114,7 +135,15 @@ end
 **Parsing Strategy**:
 - Use simple regex patterns to match `[submodule "name"]` sections
 - Extract `path` and `url` key-value pairs
+- Detect and reject malformed entries with duplicate key prefixes
+- Validate that all required fields (name, path, url) are present
 - Build array of SubmoduleEntry objects
+
+**Malformed Entry Detection**:
+- Check if path value starts with `path =` (duplicate key)
+- Check if url value starts with `url =` (duplicate key)
+- Raise descriptive error including submodule name and problematic line
+- Fail fast to prevent processing invalid configuration
 
 ### 3. PathValidator
 
@@ -281,19 +310,50 @@ end
 ### SubmoduleEntry
 ```ruby
 {
-  name: "core_gem/core",
-  path: "core_gem/core",
-  url: "https://github.com/magenticmarketactualskill/active_dataflow_core"
+  name: "core_gem/core",           # From [submodule "name"] section
+  path: "submodules/core/core",    # Relative path from repo root
+  url: "https://github.com/magenticmarketactualskill/active_dataflow-core-core.git"
 }
 ```
+
+**Field Constraints**:
+- `name`: Required, non-empty string, extracted from section header
+- `path`: Required, non-empty string, must be relative path
+- `url`: Required, non-empty string, must be valid URL format
 
 ### ValidationResult
 ```ruby
 {
   submodule_name: "core_gem/core",
   check_type: :path_exists,
-  status: :fail,
-  message: "Directory not found: core_gem/core. Expected at: /path/to/repo/core_gem/core"
+  status: :fail,  # :pass or :fail
+  message: "Directory not found: submodules/core/core. Expected at: /path/to/repo/submodules/core/core"
+}
+```
+
+**Check Types**:
+- `:path_exists` - Verifies directory exists at configured path
+- `:path_relative` - Ensures path is relative, not absolute
+- `:git_present` - Checks for `.git` file in submodule directory
+- `:directory_empty` - Detects empty submodule directories
+
+### Parsing Errors
+
+**MalformedEntryError**:
+```ruby
+{
+  submodule_name: "core_gem/core",
+  line: "path = path = submodules/core/core",
+  error: "Malformed .gitmodules: duplicate key in 'path = path = submodules/core/core' for submodule 'core_gem/core'"
+}
+```
+
+**MissingFieldError**:
+```ruby
+{
+  submodule_name: "core_gem/core",
+  missing_field: :path,  # or :url
+  error: "Malformed submodule entry: core_gem/core is missing path or url"
 }
 ```
 
@@ -311,6 +371,9 @@ end
 ### Malformed Configuration
 - **Invalid .gitmodules format**: Report line number and parsing error
 - **Missing required fields**: Report which submodule is missing path or URL
+- **Duplicate key prefixes**: Detect `path = path = value` or `url = url = value` patterns
+- **Malformed entry error message**: Include submodule name and exact line content
+- **Fail fast behavior**: Stop processing when malformed entries are detected
 
 ## Testing Strategy
 
@@ -321,6 +384,11 @@ end
    - Handle missing .gitmodules file
    - Handle malformed .gitmodules file
    - Extract correct name, path, and URL values
+   - Detect duplicate `path =` prefix in path values
+   - Detect duplicate `url =` prefix in url values
+   - Raise error for missing path field
+   - Raise error for missing url field
+   - Include submodule name in error messages
 
 2. **PathValidator Tests**
    - Detect existing paths (pass)
@@ -363,11 +431,58 @@ Use simple regex-based parsing for `.gitmodules` rather than shelling out to `gi
 - Faster for simple validation
 
 ### Exit Codes
-- `0`: All checks passed or no submodules configured
-- `1`: One or more validation checks failed
-- `2`: Script error (not a git repo, invalid arguments, etc.)
+
+**Exit Code 0 - Success**:
+- All validation checks passed
+- No submodules configured (empty or missing `.gitmodules`)
+- Indicates repository is in valid state
+
+**Exit Code 1 - Validation Failures**:
+- One or more path validation checks failed
+- One or more initialization checks failed
+- Submodule directories missing or not initialized
+- Indicates configuration issues that need fixing
+
+**Exit Code 2 - Script Errors**:
+- Not running from a git repository
+- Invalid command line arguments
+- `.gitmodules` file cannot be read (permissions)
+- `.gitmodules` contains malformed entries
+- Missing required fields in submodule entries
+- Indicates tool cannot run or configuration is invalid
 
 ### Output Format Example
+
+**Successful Validation**:
+```
+Submodule Configuration Report
+Generated: 2025-11-13 12:57:46
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 Submodule Configuration Check
+  ✓ Found .gitmodules file
+  ✓ Parsed 4 submodule entries
+
+📁 Path Validation
+  ✓ core_gem/core
+  ✓ runtime_gems/rails_heartbeat_app
+  ✓ connector_gems/active_record
+  ✓ example_apps/heartbeat_ar2ar
+
+🔧 Initialization Check
+  ✓ core_gem/core
+  ✓ runtime_gems/rails_heartbeat_app
+  ✓ connector_gems/active_record
+  ✓ example_apps/heartbeat_ar2ar
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Summary: 8 passed, 0 failed
+
+
+Exit Code: 0
+```
+
+**Validation Failures**:
 ```
 Submodule Configuration Report
 Generated: 2025-11-13 10:30:45
@@ -379,20 +494,33 @@ Generated: 2025-11-13 10:30:45
 
 📁 Path Validation
   ✗ core_gem/core
-    Directory not found: core_gem/core
-    Suggestion: Check if path should be submodules/core/core
+    Directory not found: submodules/core/core
   ✗ runtime_gems/rails_heartbeat_app
-    Directory not found: runtime_gems/rails_heartbeat_app
-    Suggestion: Check if path should be submodules/runtime/heartbeat_app
+    Directory not found: submodules/runtime/heartbeat_app
+  ✓ connector_gems/active_record
   ✓ example_apps/heartbeat_ar2ar
 
 🔧 Initialization Check
-  ✓ example_apps/heartbeat_ar2ar - Initialized
-  ⚠ submodules/core/core - Directory exists but not in .gitmodules
+  ✗ core_gem/core
+    Cannot check initialization: directory does not exist
+  ✗ runtime_gems/rails_heartbeat_app
+    Cannot check initialization: directory does not exist
+  ✓ connector_gems/active_record
+  ✓ example_apps/heartbeat_ar2ar
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Summary: 3 passed, 2 failed
-Exit code: 1
+Summary: 4 passed, 4 failed
+
+
+Exit Code: 1
+```
+
+**Malformed Configuration Error**:
+```
+Error parsing .gitmodules: Malformed .gitmodules: duplicate key in 'path = path = submodules/core/core' for submodule 'core_gem/core'
+
+
+Exit Code: 2
 ```
 
 ### Performance Considerations
