@@ -39,9 +39,8 @@ module Submoduler
       )
       puts formatter.format
 
-      # Determine exit code
-      has_failures = test_results.any? { |r| r[:status] == :failed || r[:status] == :error }
-      has_failures ? 1 : 0
+      # Determine exit code based on require_test configuration
+      determine_exit_code(test_results, entries)
 
     rescue StandardError => e
       puts "Error: #{e.message}"
@@ -57,7 +56,15 @@ module Submoduler
       entries.each do |entry|
         path = File.join(@repo_root, entry.path)
         
-        puts "\n#{colorize("Testing #{entry.name}...", :blue)}" if @options[:verbose]
+        if @options[:verbose]
+          config_info = if entry.require_test?
+                         source = entry.config_overrides.include?('require_test') ? 'child override' : 'parent default'
+                         " [require_test=true, #{source}]"
+                       else
+                         ""
+                       end
+          puts "\n#{colorize("Testing #{entry.name}...#{config_info}", :blue)}"
+        end
         
         runner = TestRunner.new(path, entry.name, @options)
         result = runner.run
@@ -76,6 +83,16 @@ module Submoduler
       end
 
       results
+    end
+
+    def determine_exit_code(test_results, entries)
+      # Check if any required tests failed
+      required_failures = test_results.select do |result|
+        entry = entries.find { |e| e.name == result[:name] }
+        entry&.require_test? && (result[:status] == :failed || result[:status] == :error)
+      end
+
+      required_failures.any? ? 1 : 0
     end
 
     def colorize(text, color)

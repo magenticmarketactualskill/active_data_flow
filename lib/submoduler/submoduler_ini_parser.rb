@@ -22,12 +22,15 @@ module Submoduler
     def parse
       entries = []
 
+      # Parse parent defaults once
+      parent_defaults = parse_parent_defaults
+
       # Find all child .submoduler.ini files
       ini_files = find_ini_files
 
       ini_files.each do |file_path|
         begin
-          entry = parse_submodule_ini(file_path)
+          entry = parse_submodule_ini(file_path, parent_defaults)
           entries << entry if entry
         rescue StandardError => e
           warn "Warning: Error parsing #{file_path}: #{e.message}"
@@ -35,6 +38,32 @@ module Submoduler
       end
 
       entries
+    end
+
+    def parse_parent_defaults
+      return {} unless File.exist?(@parent_ini_path)
+
+      begin
+        ini_data = IniFileParser.parse(@parent_ini_path)
+        ini_data['default'] || {}
+      rescue StandardError => e
+        warn "Warning: Error parsing parent defaults: #{e.message}"
+        {}
+      end
+    end
+
+    def merge_configurations(parent_defaults, child_defaults)
+      merged_config = parent_defaults.dup
+      overrides = []
+
+      child_defaults.each do |key, value|
+        if parent_defaults.key?(key) && parent_defaults[key] != value
+          overrides << key
+        end
+        merged_config[key] = value
+      end
+
+      { config: merged_config, overrides: overrides }
     end
 
     def parse_parent_ini
@@ -85,7 +114,7 @@ module Submoduler
       ini_files
     end
 
-    def parse_submodule_ini(file_path)
+    def parse_submodule_ini(file_path, parent_defaults)
       ini_data = IniFileParser.parse(file_path)
 
       # Validate required sections
@@ -94,10 +123,10 @@ module Submoduler
       end
 
       # Extract submodule info from file location
-      extract_submodule_info(file_path, ini_data)
+      extract_submodule_info(file_path, ini_data, parent_defaults)
     end
 
-    def extract_submodule_info(file_path, ini_data)
+    def extract_submodule_info(file_path, ini_data, parent_defaults)
       # Get relative path from repo root
       relative_path = Pathname.new(file_path).relative_path_from(Pathname.new(@repo_root))
 
@@ -113,11 +142,17 @@ module Submoduler
       # Store parent URL for validation
       parent_url = ini_data['parent']['url']
 
+      # Merge configurations
+      child_defaults = ini_data['default'] || {}
+      merged = merge_configurations(parent_defaults, child_defaults)
+
       SubmoduleEntry.new(
         name: name,
         path: submodule_path,
         url: url || "unknown",
-        parent_url: parent_url
+        parent_url: parent_url,
+        config: merged[:config],
+        config_overrides: merged[:overrides]
       )
     end
 

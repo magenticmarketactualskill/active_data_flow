@@ -6,6 +6,7 @@ require_relative 'init_validator'
 require_relative 'dirty_validator'
 require_relative 'unpushed_validator'
 require_relative 'report_formatter'
+require_relative 'configuration_report_formatter'
 
 module Submoduler
   # Orchestrates validation checks and generates report
@@ -27,6 +28,7 @@ module Submoduler
       # Parse submodule entries
       begin
         entries = parser.parse
+        parent_defaults = parser.parse_parent_defaults
       rescue StandardError => e
         puts "Error parsing .gitmodules: #{e.message}"
         return 1
@@ -38,6 +40,11 @@ module Submoduler
       # Generate and display report
       formatter = ReportFormatter.new(results, submodule_count: entries.length)
       puts formatter.format
+
+      # Display configuration overrides
+      config_formatter = ConfigurationReportFormatter.new(entries, parent_defaults)
+      config_output = config_formatter.format
+      puts config_output unless config_output.empty?
 
       # Return exit code based on results
       results.any?(&:failed?) ? 1 : 0
