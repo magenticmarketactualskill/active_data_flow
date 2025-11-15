@@ -6,3 +6,6 @@ submodules/**/*
 !submodules/
 !submodules/*/
 !submodules/*/*/
+
+# Ignore vendored gems
+vendor/

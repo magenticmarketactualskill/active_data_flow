@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+# Submoduler parent gem
+gem 'submoduler_parent', git: 'https://github.com/magenticmarketactualskill/submoduler-core-submoduler_parent.git'
+
+# Development dependencies
+group :development, :test do
+  gem 'minitest'
+  gem 'minitest-pride'
+end
