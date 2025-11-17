@@ -1,24 +1,24 @@
 add .
 # Implementation Plan
 
-- [ ] 1. Implement core message types
+- [x] 1. Implement core message types
   - [x] 1.1 Implement Message::Untyped class with data accessors
     - Create `lib/message/untyped.rb` with initialization and data access methods
     - _Requirements: 2.2, 2.3, 2.5_
-  - [ ] 1.2 Implement Message::Typed class with schema validation
+  - [x] 1.2 Implement Message::Typed class with schema validation
     - Create `lib/message/typed.rb` with schema validation logic
     - _Requirements: 2.1, 2.3, 2.5_
 
-- [ ] 2. Implement connector base classes
-  - [ ] 2.1 Implement Connector::Source base class
+- [x] 2. Implement connector base classes
+  - [x] 2.1 Implement Connector::Source base class
     - Create `lib/connector/source/source.rb` with `each` method and configuration handling
     - _Requirements: 1.1, 1.3, 1.5_
-  - [ ] 2.2 Implement Connector::Sink base class
+  - [x] 2.2 Implement Connector::Sink base class
     - Create `lib/connector/sink/sink.rb` with `write` method and configuration handling
     - _Requirements: 1.2, 1.4, 1.5_
 
 - [ ] 3. Implement runtime base classes
-  - [ ] 3.1 Implement Runtime base class
+  - [x] 3.1 Implement Runtime base class
     - Create `lib/runtime/runtime.rb` with configuration and execution strategy interface
     - _Requirements: 4.1, 4.4_
   - [ ] 3.2 Implement Runtime::Runner base class
