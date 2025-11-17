@@ -3,9 +3,13 @@
 ## Repository Organization
 
 This is a monorepo containing specifications and submodules for the ActiveDataFlow gem suite.
+Active Dataflow gem defines common interfaces required for interoperability with plugin connectors and runtimes.
 
+It also implements a RAILS ENGINE to cleanly handle DataFlow-Specific models,  controllers, and views in the context of complex existing RAILS applications.
 ```
+
 /
+└── .kiro/                   # Kiro configuration and specs
 ├── docs/                    # Documentation and design documents
 ├── examples/                # Example applications (as submodules)
 ├── subgems/                 # Gems implementing Components managed in Active Dataflow repo
@@ -13,20 +17,10 @@ This is a monorepo containing specifications and submodules for the ActiveDataFl
 ├── lib/                     # Placeholder module definitions
 ├── test/                    # Integration tests for submoduler tool
 ├── bin/                     # Executable scripts (submoduler)
-└── .kiro/                   # Kiro configuration and specs
-```
-### File Structure (within Active Dataflow)
-
-Active Dataflow gem defines common interfaces required for interoperability with plugin connectors and runtimes.
-
-It also implements a RAILS ENGINE to cleanly handle DataFlow-Specific models,  controllers, and views in the context of complex existing RAILS applications.    
-
-```
-active_data_flow/
 ├── lib/
 │   └── active_data_flow/
 │       ├── runtime          # Base runtime class
-│           ├── heartbeat    # heartBEat implementation
+│           ├── runner       # Base runtime class
 │       ├── connector        # Base connector class
 │           ├── source       # Base source class
 │           ├── sink         # Base sink class
@@ -34,7 +28,9 @@ active_data_flow/
 ├── app/                     # Rails components (for Rails-based gems)
 │   ├── models/
 │   ├── controllers/
+│   |   ├── data_flow/
 │   └── services/
+│       ├── data_flow/
 └── db/migrate/                # Database migrations (if needed)
 ```
 
@@ -46,14 +42,16 @@ Submoduler gem provides file structure and automation of SubGem and SubModule co
 ## SubGems
 These gems are stored in the same git repo as the active_data_flow. This provides 'turnkey' installation and use for simple use-cases.
 
+Example of SubGem active_data_flow-connector-source-actiuve_record:
+
 ```
 active_data_flow/
 ├── subgems/
-│       ├── connector        # Base connector class
-│           ├── source       # Base source class
-│               ├── active_record    # connector source active_record implementation GEM
-│           ├── sink         # Base sink class
-│               ├── active_record    # connector sink active_record implementation GEM
+│       ├── connector/        # Base connector class
+│               ├── source/       # Base source class
+│                     ├── active_record    # connector source active_record implementation GEM
+
+
 
 ```
 
@@ -71,9 +69,16 @@ Each gem is developed as a separate git submodule under `hide/submodules/`:
 ### Module Naming
 
 - Core module: `ActiveDataFlow`
-- Connectors: `ActiveDataFlow::Source::*` and `ActiveDataFlow::Sink::*`
-- Runtimes: Typically integrate with Rails or provide standalone execution
+- Connectors: `ActiveDataFlow::Connector::Source::*` and `ActiveDataFlow::Connector::Sink::*`
+- Runtimes: 'ActiveDataFlow::Runtime::*'
 
+### Gem Naming
+
+- Core gem: `active_data_flow`
+- Connectors: `active_data_flow-connector-*`
+- Sources: `active_data_flow-connector-source-*`
+- Sinks: `active_data_flow-connector-sink-*`
+- Runtimes: `active_data_flow-runtime-*`
 
 ## Key Directories
 
