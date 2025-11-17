@@ -1,13 +1,22 @@
-# Requirements Document
+# Parent Requirements
 
 ## Introduction
 
-This document specifies what users (Parents) of Active Data Flow need to kow.
+This document specifies what parent applications (users of ActiveDataflow) need to know.
 
-They should know THIS introduces a new top-level folder to a RAILS application (./data_flow) where developer define SOURCE, SINK, and RUNTIME characteristics of their data flow requirements.
+## Key Information for Parents
 
-They should know THIS introduces new controllers for the defined dataflows that provide application users the ability to manage and monitor those data flows.
+See main requirements: `.kiro/specs/requirements.md`
 
-They should know THIS introduces a new RAILS engine (Heartbeat) that is triggered periodically by a REST call to allows data flows to proceed independently of any user input.
+### What ActiveDataflow Provides
 
-They should know THIS introduces models to store current data flow instance states.
+- A new top-level folder `./data_flow` where developers define SOURCE, SINK, and RUNTIME characteristics
+- Controllers for managing and monitoring DataFlows
+- A Rails engine (Heartbeat) triggered periodically by REST calls for autonomous execution
+- Models to store DataFlow instance states
+
+### Core Abstractions
+
+See: `.kiro/specs/toParent/connector/requirements.md` for connector details
+See: `.kiro/specs/toParent/runtime/requirements.md` for runtime details
+See: `.kiro/specs/toParent/dependencies/requirements.md` for dependency information

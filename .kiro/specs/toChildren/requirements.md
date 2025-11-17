@@ -1,15 +1,26 @@
-# Requirements Document
+# Child Component Requirements
 
 ## Introduction
 
-This document specifies the requirements for a Rails 8 library that implements a data transformation system.
+This document specifies what child components (runtimes and connectors) need to know when implementing ActiveDataflow interfaces.
 
-## Requirements
+See main requirements: `.kiro/specs/requirements.md`
 
-It should introduce a new top-level folder to a RAILS application (./data_flow) where developer define SOURCE, SINK, and RUNTIME characteristics of their data flow requirements.
+## Requirements for Child Components
 
-It should introduce new controllers for the defined dataflows that provide application users the ability to manage and monitor those data flows.
+### For Runtime Implementations
 
-It should introduce a new RAILS engine (Heartbeat) that is triggered periodically by a REST call to allows data flows to proceed independently of any user input.
+See: `.kiro/specs/toChildren/runtime/requirements.md`
+See: `.kiro/specs/requirements.md` (Requirements 7-9, 14)
 
-It should introduce models to store current data flow instance states.
+### For Connector Implementations
+
+See: `.kiro/specs/toChildren/connector/` subdirectories
+See: `.kiro/specs/requirements.md` (Requirements 1-6, 15)
+
+## Core Interfaces to Implement
+
+Child components must implement the abstract classes defined in the core gem:
+- Runtimes extend `ActiveDataflow::Runtime`
+- Sources extend `ActiveDataflow::Connector::Source`
+- Sinks extend `ActiveDataflow::Connector::Sink`
