@@ -5,16 +5,15 @@ ActiveDataFlow is a modular stream processing framework for Ruby inspired by Apa
 ## Key Components
 
 - **Core**: Abstract interfaces and base classes for sources, sinks, and data flows
-- **Runtimes**: Execution environments (Rails Heartbeat, ActiveJob, AWS Lambda, Flink)
-- **Connectors**: Data source/sink implementations (Rafka, ActiveRecord, Cache, File, Iceberg)
+- **Runtimes**: Execution environments (currently: Rails Heartbeat; planned: ActiveJob, AWS Lambda, Flink)
+- **Connectors**: Data source/sink implementations (currently: ActiveRecord; planned: Kafka, Cache, File, Iceberg)
 - **Framework Extensions**: Additional capabilities like split-based source support
 
 ## Message Types
 
-All data flows work with `ActiveDataFlow::Message` instances:
-- `ActiveDataFlow::Message::Unconstrained` - Generic messages
-- `ActiveDataFlow::Message::CloudEvent` - CloudEvents standard
-- `ActiveDataFlow::Message::CloudEventLd` - CloudEventsLd format
+All data flows work with `ActiveDataflow::Message` instances:
+- `ActiveDataflow::Message::Typed` - Typed messages with schema validation
+- `ActiveDataflow::Message::Untyped` - Untyped messages for flexible data handling
 
 ## Architecture Philosophy
 
