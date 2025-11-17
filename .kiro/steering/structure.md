@@ -7,31 +7,21 @@ Active Dataflow gem defines common interfaces required for interoperability with
 
 It also implements a RAILS ENGINE to cleanly handle DataFlow-Specific models,  controllers, and views in the context of complex existing RAILS applications.
 ```
-
 /
-└── .kiro/                   # Kiro configuration and specs
+├── .kiro/                   # Kiro configuration and specs
 ├── docs/                    # Documentation and design documents
 ├── examples/                # Example applications (as submodules)
 ├── subgems/                 # Gems implementing Components managed in Active Dataflow repo
 ├── submodules/              # Gems implementing Components managed in other repos
 ├── lib/                     # Placeholder module definitions
+│   ├── connector/           # Connector placeholder modules
+│   │   ├── sink/
+│   │   └── source/
+│   ├── message/             # Message type placeholders
+│   └── runtime/             # Runtime placeholder modules
 ├── test/                    # Integration tests for submoduler tool
 ├── bin/                     # Executable scripts (submoduler)
-├── lib/
-│   └── active_data_flow/
-│       ├── runtime          # Base runtime class
-│           ├── runner       # Base runtime class
-│       ├── connector        # Base connector class
-│           ├── source       # Base source class
-│           ├── sink         # Base sink class
-├── spec/                    # RSpec tests
-├── app/                     # Rails components (for Rails-based gems)
-│   ├── models/
-│   ├── controllers/
-│   |   ├── data_flow/
-│   └── services/
-│       ├── data_flow/
-└── db/migrate/                # Database migrations (if needed)
+└── vendor/                  # Vendored dependencies
 ```
 
 
@@ -42,17 +32,14 @@ Submoduler gem provides file structure and automation of SubGem and SubModule co
 ## SubGems
 These gems are stored in the same git repo as the active_data_flow. This provides 'turnkey' installation and use for simple use-cases.
 
-Example of SubGem active_data_flow-connector-source-actiuve_record:
+Example of SubGem active_data_flow-connector-source-active_record:
 
 ```
 active_data_flow/
-├── subgems/
-│       ├── connector/        # Base connector class
-│               ├── source/       # Base source class
-│                     ├── active_record    # connector source active_record implementation GEM
-
-
-
+└── subgems/
+    └── connector/
+        └── source/
+            └── active_record/    # connector source active_record implementation GEM
 ```
 
 ## SubModule
