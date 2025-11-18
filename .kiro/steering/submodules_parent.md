@@ -378,7 +378,7 @@ vendor/
 
 ## Related Documentation
 
-- **Subgems Guide**: `.kiro/steering/subgems.md` - Preferred approach for most components
+- **Subgems Guide**: `.kiro/steering/subgems_parent.md` - Preferred approach for most components
 - **Gemfile Guidelines**: `.kiro/steering/gemfiles.md`
 - **Project Structure**: `.kiro/steering/structure.md`
 - **Git Submodules**: https://git-scm.com/book/en/v2/Git-Tools-Submodules

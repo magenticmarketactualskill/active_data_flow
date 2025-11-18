@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `submoduler` gem is the base tool for managing git submodules and monorepo structures. It provides the foundation for both `submoduler_parent` and `submoduler_child` gems used in the active_data_flow project.
+The `submoduler` gem is the base tool for managing subgems and git submodules and monorepo structures. It provides the foundation for both `submoduler_parent` and `submoduler_child` gems used in the active_data_flow project.
 
 **Submoduler Ecosystem**:
 - **`submoduler`** - Base gem with core functionality
@@ -337,7 +337,7 @@ active_data_flow/
 
 - **Submoduler Parent**: `.kiro/steering/submodules_parent.md` - Parent gem guide
 - **Submoduler Child**: `.kiro/steering/submoduler_child.md` - Child gem guide
-- **Subgems Guide**: `.kiro/steering/subgems.md` - Subgem development
+- **Subgems Guide**: `.kiro/steering/subgems_parent.md` - Subgem development
 - **Gemfile Guidelines**: `.kiro/steering/gemfiles.md` - Gemfile patterns
 - **Project Structure**: `.kiro/steering/structure.md` - Repository organization
 

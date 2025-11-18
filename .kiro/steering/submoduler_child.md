@@ -357,7 +357,7 @@ grep "spec.files" *.gemspec
 ## Related Documentation
 
 - **Submoduler Parent**: `.kiro/steering/submodules_parent.md` - Parent gem guide
-- **Subgems Guide**: `.kiro/steering/subgems.md` - Complete subgem development guide
+- **Subgems Guide**: `.kiro/steering/subgems_parent.md` - Complete subgem development guide
 - **Gemfile Guidelines**: `.kiro/steering/gemfiles.md` - Gemfile patterns
 - **Project Structure**: `.kiro/steering/structure.md` - Repository organization
 
