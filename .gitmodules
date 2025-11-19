@@ -1,0 +1,3 @@
+[submodule "submodules/examples/rails8-demo"]
+	path = submodules/examples/rails8-demo
+	url = ./submodules/examples/rails8-demo

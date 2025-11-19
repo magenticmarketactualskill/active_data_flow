@@ -22,7 +22,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Runtime dependencies
-  spec.add_dependency "active_data_flow-core-core", "~> 0.1"
   spec.add_dependency "activerecord", ">= 6.0"
   spec.add_dependency "activesupport", ">= 6.0"
 
