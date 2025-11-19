@@ -21,7 +21,7 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
     stub_const("MockFlow", mock_flow_class)
   end
 
-  describe "POST #heartbeat" do
+  shared_examples "heartbeat endpoint" do |http_method|
     context "authentication" do
       context "when authentication is enabled" do
         before do
@@ -35,27 +35,27 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
         end
 
         it "returns 401 when token is missing" do
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(response).to have_http_status(:unauthorized)
           expect(JSON.parse(response.body)["error"]).to eq("Unauthorized")
         end
 
         it "returns 401 when token is invalid" do
           request.headers["X-Heartbeat-Token"] = "wrong_token"
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(response).to have_http_status(:unauthorized)
           expect(JSON.parse(response.body)["error"]).to eq("Unauthorized")
         end
 
         it "processes request when token is valid" do
           request.headers["X-Heartbeat-Token"] = "secret_token"
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(response).to have_http_status(:ok)
         end
 
         it "logs authentication failures" do
           allow(Rails.logger).to receive(:warn)
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(Rails.logger).to have_received(:warn).with(/Heartbeat authentication failed/)
         end
       end
@@ -66,7 +66,7 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
         end
 
         it "processes request without token" do
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(response).to have_http_status(:ok)
         end
       end
@@ -86,21 +86,21 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
 
         it "returns 403 when IP is not in whitelist" do
           allow(controller.request).to receive(:remote_ip).and_return("10.0.0.1")
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(response).to have_http_status(:forbidden)
           expect(JSON.parse(response.body)["error"]).to eq("Forbidden")
         end
 
         it "processes request when IP is in whitelist" do
           allow(controller.request).to receive(:remote_ip).and_return("127.0.0.1")
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(response).to have_http_status(:ok)
         end
 
         it "logs IP rejections" do
           allow(Rails.logger).to receive(:warn)
           allow(controller.request).to receive(:remote_ip).and_return("10.0.0.1")
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(Rails.logger).to have_received(:warn).with(/Heartbeat IP whitelist rejection/)
         end
       end
@@ -112,7 +112,7 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
 
         it "processes request from any IP" do
           allow(controller.request).to receive(:remote_ip).and_return("10.0.0.1")
-          post :heartbeat
+          send(http_method, :heartbeat)
           expect(response).to have_http_status(:ok)
         end
       end
@@ -138,7 +138,7 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
       end
 
       it "queries due_to_run flows" do
-        post :heartbeat
+        send(http_method, :heartbeat)
         expect(response).to have_http_status(:ok)
         body = JSON.parse(response.body)
         expect(body["flows_due"]).to eq(1)
@@ -146,11 +146,11 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
 
       it "executes each due flow via FlowExecutor" do
         expect(ActiveDataFlow::Runtime::Heartbeat::FlowExecutor).to receive(:execute).with(due_flow)
-        post :heartbeat
+        send(http_method, :heartbeat)
       end
 
       it "returns JSON with flows_due and flows_triggered counts" do
-        post :heartbeat
+        send(http_method, :heartbeat)
         expect(response).to have_http_status(:ok)
         body = JSON.parse(response.body)
         expect(body).to have_key("flows_due")
@@ -159,7 +159,7 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
       end
 
       it "returns 200 status on success" do
-        post :heartbeat
+        send(http_method, :heartbeat)
         expect(response).to have_http_status(:ok)
       end
 
@@ -175,7 +175,7 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
         allow(ActiveDataFlow::Runtime::Heartbeat::FlowExecutor).to receive(:execute).with(failing_flow).and_raise(StandardError, "Flow failed")
         allow(Rails.logger).to receive(:error)
 
-        post :heartbeat
+        send(http_method, :heartbeat)
         expect(response).to have_http_status(:ok)
         expect(Rails.logger).to have_received(:error).with(/Flow execution failed/)
       end
@@ -183,11 +183,19 @@ RSpec.describe ActiveDataFlow::Runtime::Heartbeat::DataFlowsController, type: :c
       it "returns 500 status when exception occurs" do
         allow(ActiveDataFlow::Runtime::Heartbeat::DataFlow).to receive(:due_to_run).and_raise(StandardError, "Database error")
 
-        post :heartbeat
+        send(http_method, :heartbeat)
         expect(response).to have_http_status(:internal_server_error)
         body = JSON.parse(response.body)
         expect(body["error"]).to eq("Database error")
       end
     end
+  end
+
+  describe "POST #heartbeat" do
+    it_behaves_like "heartbeat endpoint", :post
+  end
+
+  describe "GET #heartbeat" do
+    it_behaves_like "heartbeat endpoint", :get
   end
 end

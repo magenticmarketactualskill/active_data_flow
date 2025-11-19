@@ -4,7 +4,6 @@ class CreateDataFlows < ActiveRecord::Migration[6.0]
   def change
     create_table :data_flows do |t|
       t.string :name, null: false
-      t.text :description
       t.boolean :enabled, default: true, null: false
       t.text :configuration
       t.integer :run_interval, null: false

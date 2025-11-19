@@ -9,7 +9,13 @@ module ActiveDataFlow
         before_action :check_ip_whitelist!
 
         def heartbeat
-          flows = DataFlow.due_to_run.lock("FOR UPDATE SKIP LOCKED")
+          heartbeat_event
+        end
+
+        private
+
+        def heartbeat_event
+          flows = DataFlow.due_to_run
           triggered_count = 0
 
           flows.each do |flow|
@@ -28,8 +34,6 @@ module ActiveDataFlow
         rescue => e
           render json: { error: e.message }, status: :internal_server_error
         end
-
-        private
 
         def authenticate_heartbeat!
           return unless ActiveDataFlow::Runtime::Heartbeat.config.authentication_enabled

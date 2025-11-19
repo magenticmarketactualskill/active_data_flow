@@ -1,1 +1,1 @@
-../../../../.kiro/steering/subgems_parent.md
+../../vendor/submoduler_parent/.kiro/steering/subgems_parent.md

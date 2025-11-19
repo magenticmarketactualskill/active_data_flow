@@ -14,9 +14,15 @@ module ActiveDataFlow
         end
 
         def execute
-          create_run_record
-          instantiate_and_run_flow
-          mark_success
+          # Use pessimistic locking to prevent concurrent execution
+          DataFlow.transaction do
+            locked_flow = DataFlow.lock("FOR UPDATE SKIP LOCKED").find_by(id: data_flow.id)
+            return unless locked_flow # Skip if already locked by another process
+            
+            create_run_record
+            instantiate_and_run_flow
+            mark_success
+          end
         rescue => e
           mark_failure(e)
           raise

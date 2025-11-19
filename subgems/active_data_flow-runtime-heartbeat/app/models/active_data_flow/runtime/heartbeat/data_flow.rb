@@ -22,13 +22,12 @@ module ActiveDataFlow
 
         # Scopes
         scope :enabled, -> { where(enabled: true) }
-
-        # Class Methods
-        def self.due_to_run
-          enabled.select do |flow|
-            flow.last_run_at.nil? || (Time.current - flow.last_run_at) >= flow.run_interval
-          end
-        end
+        scope :due_to_run, lambda {
+          enabled.where(
+            "last_run_at IS NULL OR (julianday(?) - julianday(last_run_at)) * 86400 >= run_interval",
+            Time.current
+          )
+        }
 
         # Instance Methods
         def trigger_run!
