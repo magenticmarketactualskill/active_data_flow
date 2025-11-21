@@ -58,14 +58,22 @@ end
 Data flows can be created programmatically by passing actual source, sink, and runtime instances:
 
 ```ruby
-# Create connector instances
-source = ActiveDataFlow::Connector::Source::ActiveRecord.new(
-  model: User,
+# Option 1: Using named scopes (serializable - recommended for persistence)
+source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
+  model_class: User,
+  scope_name: :active,  # Calls User.active
   batch_size: 100
 )
 
-sink = ActiveDataFlow::Connector::Sink::ActiveRecord.new(
-  model: UserBackup
+# Option 2: Using a scope directly (for immediate use, not serializable)
+source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
+  scope: User.where(active: true).order(:created_at),
+  batch_size: 100
+)
+
+sink = ActiveDataFlow::Connector::Sink::ActiveRecordSink.new(
+  model_class: UserBackup,
+  batch_size: 100
 )
 
 runtime = ActiveDataFlow::Runtime::Heartbeat.new(
@@ -81,7 +89,7 @@ ActiveDataFlow::DataFlow.create!(
 )
 ```
 
-The instances are automatically serialized and stored in the database.
+**Note:** For data flows that need to be persisted and reloaded, use the `model_class` + `scope_name` approach. Direct scopes work for immediate execution but cannot be fully serialized.
 
 ## Architecture
 
