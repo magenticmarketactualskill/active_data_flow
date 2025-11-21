@@ -4,12 +4,9 @@ class CreateActiveDataFlowDataFlows < ActiveRecord::Migration[6.0]
   def change
     create_table :active_data_flow_data_flows do |t|
       t.string :name, null: false
-      t.string :source_type, null: false
-      t.text :source_config
-      t.string :sink_type, null: false
-      t.text :sink_config
-      t.string :runtime_type
-      t.text :runtime_config
+      t.json :source, null: false
+      t.json :sink, null: false
+      t.json :runtime
       t.string :status, default: "inactive"
       t.datetime :last_run_at
       t.text :last_error

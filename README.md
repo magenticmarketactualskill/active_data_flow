@@ -55,18 +55,33 @@ end
 
 ### Creating Data Flows
 
-Data flows can be created programmatically:
+Data flows can be created programmatically by passing actual source, sink, and runtime instances:
 
 ```ruby
+# Create connector instances
+source = ActiveDataFlow::Connector::Source::ActiveRecord.new(
+  model: User,
+  batch_size: 100
+)
+
+sink = ActiveDataFlow::Connector::Sink::ActiveRecord.new(
+  model: UserBackup
+)
+
+runtime = ActiveDataFlow::Runtime::Heartbeat.new(
+  interval: 60
+)
+
+# Create the data flow with instances
 ActiveDataFlow::DataFlow.create!(
   name: "user_sync",
-  source_type: "ActiveDataFlow::Connector::Source::ActiveRecord",
-  source_config: { model: "User" }.to_json,
-  sink_type: "ActiveDataFlow::Connector::Sink::ActiveRecord",
-  sink_config: { model: "UserBackup" }.to_json,
-  runtime_type: "ActiveDataFlow::Runtime::Heartbeat"
+  source: source,
+  sink: sink,
+  runtime: runtime
 )
 ```
+
+The instances are automatically serialized and stored in the database.
 
 ## Architecture
 

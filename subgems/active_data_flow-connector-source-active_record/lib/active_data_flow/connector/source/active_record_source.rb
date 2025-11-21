@@ -4,13 +4,12 @@ module ActiveDataFlow
   module Connector
     module Source
       class ActiveRecordSource < ::ActiveDataFlow::Connector::Source::Base
-        attr_reader :config, :model_class
+        attr_reader :model_class, :scope
 
-        def initialize(config)
+        def initialize(model_class:,scope:)
           super()
-          @config = config
-          validate_config!
-          @model_class = nil
+          @model_class = model_class
+          @scope = scope
         end
 
         def each(&block)
@@ -22,16 +21,6 @@ module ActiveDataFlow
         end
 
         private
-
-        def validate_config!
-          raise ArgumentError, 'model_name is required' unless @config[:model_name]
-        end
-
-        def resolve_model
-          @model_class ||= @config[:model_name].to_s.constantize
-        rescue NameError => e
-          raise ArgumentError, "Invalid model name '#{@config[:model_name]}': #{e.message}"
-        end
 
         def build_query
           query = resolve_model.all

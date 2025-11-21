@@ -1,11 +1,25 @@
 <h2><%= @data_flow&.name %></h2>
 
 <dl>
-  <dt>Source Type:</dt>
-  <dd><%= @data_flow&.source_type %></dd>
+  <dt>Source:</dt>
+  <dd>
+    <strong>Type:</strong> <%= @data_flow&.source_type %><br>
+    <strong>Instance:</strong> <pre><%= @data_flow&.source.inspect %></pre>
+  </dd>
   
-  <dt>Sink Type:</dt>
-  <dd><%= @data_flow&.sink_type %></dd>
+  <dt>Sink:</dt>
+  <dd>
+    <strong>Type:</strong> <%= @data_flow&.sink_type %><br>
+    <strong>Instance:</strong> <pre><%= @data_flow&.sink.inspect %></pre>
+  </dd>
+  
+  <% if @data_flow&.runtime.present? %>
+    <dt>Runtime:</dt>
+    <dd>
+      <strong>Type:</strong> <%= @data_flow&.runtime_type %><br>
+      <strong>Instance:</strong> <pre><%= @data_flow&.runtime.inspect %></pre>
+    </dd>
+  <% end %>
   
   <dt>Status:</dt>
   <dd><%= @data_flow&.status %></dd>
