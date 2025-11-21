@@ -70,8 +70,8 @@ See: `../steering/glossary.md` for shared terminology
 
 #### Acceptance Criteria
 
-1. THE ActiveRecord Sink SHALL accept ActiveDataflow::Message::Untyped instances
-2. THE ActiveRecord Sink SHALL accept ActiveDataflow::Message::Typed instances
+1. THE ActiveRecord Sink SHALL accept ActiveDataFlow::Message::Untyped instances
+2. THE ActiveRecord Sink SHALL accept ActiveDataFlow::Message::Typed instances
 3. THE ActiveRecord Sink SHALL extract data from message instances
 4. THE ActiveRecord Sink SHALL accept plain Hash objects
 5. THE ActiveRecord Sink SHALL raise ArgumentError for unsupported types

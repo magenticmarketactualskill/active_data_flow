@@ -2,7 +2,7 @@
 
 ## Overview
 
-The ActiveRecord source connector provides a concrete implementation of `ActiveDataflow::Connector::Source::Base` for reading data from database tables using ActiveRecord models.
+The ActiveRecord source connector provides a concrete implementation of `ActiveDataFlow::Connector::Source::Base` for reading data from database tables using ActiveRecord models.
 
 See: `parent_requirements.md` - Requirement 3 (ActiveRecord Connector Implementation)
 See: `parent_design.md` - Section 3 (Connector Abstractions)
@@ -13,8 +13,8 @@ See: `requirements.md` for source-specific requirements
 ### Class Hierarchy
 
 ```
-ActiveDataflow::Connector::Source::Base (from core)
-  └── ActiveDataflow::Connector::Source::ActiveRecord (this gem)
+ActiveDataFlow::Connector::Source::Base (from core)
+  └── ActiveDataFlow::Connector::Source::ActiveRecord (this gem)
 ```
 
 ### Key Components
@@ -41,7 +41,7 @@ ActiveDataflow::Connector::Source::Base (from core)
 ### Message Format
 
 ```ruby
-ActiveDataflow::Message::Untyped.new(
+ActiveDataFlow::Message::Untyped.new(
   { "id" => 1, "name" => "Widget", ... },  # Record attributes
   metadata: { model: "Product", id: 1 }     # Model info
 )
@@ -52,14 +52,14 @@ ActiveDataflow::Message::Untyped.new(
 ### Basic Usage
 
 ```ruby
-source = ActiveDataflow::Connector::Source::ActiveRecord.new(model: Product)
+source = ActiveDataFlow::Connector::Source::ActiveRecord.new(model: Product)
 source.each { |message| process(message) }
 ```
 
 ### With Scope
 
 ```ruby
-source = ActiveDataflow::Connector::Source::ActiveRecord.new(
+source = ActiveDataFlow::Connector::Source::ActiveRecord.new(
   model: "Product",
   scope: ->(r) { r.where(active: true).order(:name) }
 )
@@ -68,7 +68,7 @@ source = ActiveDataflow::Connector::Source::ActiveRecord.new(
 ### Custom Batch Size
 
 ```ruby
-source = ActiveDataflow::Connector::Source::ActiveRecord.new(
+source = ActiveDataFlow::Connector::Source::ActiveRecord.new(
   model: :Product,
   batch_size: 500
 )

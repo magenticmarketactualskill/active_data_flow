@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    active_data_flow (0.1.0)
+    active_data_flow (0.1.1)
       rails (>= 6.0)
 
 PATH
@@ -278,6 +278,7 @@ DEPENDENCIES
   active_data_flow-connector-sink-active_record!
   active_data_flow-connector-source-active_record!
   active_data_flow-runtime-heartbeat!
+  bundler
   rspec (~> 3.12)
   rspec-rails (~> 6.0)
   rubocop (~> 1.50)

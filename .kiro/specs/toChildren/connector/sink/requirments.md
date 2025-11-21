@@ -1,4 +1,4 @@
-ActiveDataFlow Connector Sinks should extend ActiveDataflow::Connection::Sink
+ActiveDataFlow Connector Sinks should extend ActiveDataFlow::Connection::Sink
 
 
 

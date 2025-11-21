@@ -10,11 +10,11 @@ See main requirements: `.kiro/specs/requirements.md` (Requirements 7-9, 14)
 
 ### Abstract Class
 
-- `ActiveDataflow::Runtime` - Base runtime class for execution environments
+- `ActiveDataFlow::Runtime` - Base runtime class for execution environments
 
 ### Default Implementation
 
-- `ActiveDataflow::Runtime::Heartbeat` - Heartbeat-triggered execution with Rails integration
+- `ActiveDataFlow::Runtime::Heartbeat` - Heartbeat-triggered execution with Rails integration
 
 The Heartbeat runtime provides:
 - Periodic execution via REST endpoint

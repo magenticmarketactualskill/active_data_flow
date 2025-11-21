@@ -2,11 +2,11 @@
 
 # Test Design Template
 #
-# This file provides a template for designing RSpec tests for ActiveDataflow components.
+# This file provides a template for designing RSpec tests for ActiveDataFlow components.
 # See: .kiro/steering/test_driven_design.md for testing guidelines
 
 # Example: Base class test structure
-RSpec.describe ActiveDataflow::Connector::Source do
+RSpec.describe ActiveDataFlow::Connector::Source do
   describe '#each' do
     context 'when not implemented by subclass' do
       it 'raises NotImplementedError' do
@@ -26,7 +26,7 @@ RSpec.describe ActiveDataflow::Connector::Source do
 end
 
 # Example: Concrete implementation test structure
-RSpec.describe ActiveDataflow::Connector::Source::ActiveRecord do
+RSpec.describe ActiveDataFlow::Connector::Source::ActiveRecord do
   let(:model_class) { double('Model', all: records) }
   let(:records) { [double('Record1'), double('Record2')] }
   let(:config) { { model: 'TestModel' } }
@@ -60,7 +60,7 @@ RSpec.describe ActiveDataflow::Connector::Source::ActiveRecord do
 end
 
 # Example: Runtime test structure
-RSpec.describe ActiveDataflow::Runtime::Heartbeat::Runner do
+RSpec.describe ActiveDataFlow::Runtime::Heartbeat::Runner do
   let(:data_flow) { double('DataFlow', run: true) }
   let(:config) { { data_flow: data_flow } }
 

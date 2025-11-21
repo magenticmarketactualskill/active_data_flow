@@ -5,7 +5,7 @@ When designing Ruby code files:
 ## File Organization
 
 - One class per file
-- File path matches module structure: `lib/connector/source.rb` → `ActiveDataflow::Connector::Source`
+- File path matches module structure: `lib/connector/source.rb` → `ActiveDataFlow::Connector::Source`
 - Use `require_relative` for internal dependencies
 
 ## Class Design

@@ -1,6 +1,6 @@
 # Gem Design Guidelines
 
-When designing gems in the ActiveDataflow suite:
+When designing gems in the ActiveDataFlow suite:
 
 ## Structure
 
@@ -35,8 +35,8 @@ subgems/component/type/name/
 
 - **Gem names**: `active_data_flow-{component}-{type}-{name}`
   - Example: `active_data_flow-connector-source-active_record`
-- **Module names**: `ActiveDataflow::{Component}::{Type}::{Name}`
-  - Example: `ActiveDataflow::Connector::Source::ActiveRecord`
+- **Module names**: `ActiveDataFlow::{Component}::{Type}::{Name}`
+  - Example: `ActiveDataFlow::Connector::Source::ActiveRecord`
 - **File paths**: Match module structure
   - Example: `lib/active_data_flow/connector/source/active_record.rb`
 
@@ -64,7 +64,7 @@ Gem::Specification.new do |spec|
   spec.name          = "active_data_flow-connector-source-active_record"
   spec.version       = "0.1.0"
   spec.authors       = ["Your Name"]
-  spec.summary       = "ActiveRecord source connector for ActiveDataflow"
+  spec.summary       = "ActiveRecord source connector for ActiveDataFlow"
   
   spec.files         = Dir["lib/**/*"]
   spec.require_paths = ["lib"]

@@ -2,15 +2,15 @@
 
 ## Introduction
 
-This document specifies requirements for a Rails 8 demonstration application that showcases ActiveDataflow functionality. The app will be created as a git submodule to demonstrate real-world usage of the framework.
+This document specifies requirements for a Rails 8 demonstration application that showcases ActiveDataFlow functionality. The app will be created as a git submodule to demonstrate real-world usage of the framework.
 
-See: `../requirements.md` for parent ActiveDataflow requirements
+See: `../requirements.md` for parent ActiveDataFlow requirements
 
 ## Glossary
 
 See: `../../glossary.md` for shared terminology
 
-- **Demo App**: A complete Rails application demonstrating ActiveDataflow usage
+- **Demo App**: A complete Rails application demonstrating ActiveDataFlow usage
 - **Submodule**: A git submodule containing the demo application
 - **Example DataFlow**: A working DataFlow implementation in the demo app
 
@@ -18,23 +18,23 @@ See: `../../glossary.md` for shared terminology
 
 ### Requirement 1: Rails 8 Application Setup
 
-**User Story:** As a developer, I want a complete Rails 8 application, so that I can see ActiveDataflow in a real Rails environment.
+**User Story:** As a developer, I want a complete Rails 8 application, so that I can see ActiveDataFlow in a real Rails environment.
 
 #### Acceptance Criteria
 
 1. THE Demo App SHALL be a Rails 8 application
 2. THE Demo App SHALL be created as a git submodule in `submodules/examples/rails8-demo`
-3. THE Demo App SHALL include ActiveDataflow gems as dependencies
+3. THE Demo App SHALL include ActiveDataFlow gems as dependencies
 4. THE Demo App SHALL use SQLite for simplicity
 5. THE Demo App SHALL include seed data for demonstration
 
-### Requirement 2: ActiveDataflow Integration
+### Requirement 2: ActiveDataFlow Integration
 
-**User Story:** As a developer, I want to see ActiveDataflow integrated into Rails, so that I understand how to use it in my own applications.
+**User Story:** As a developer, I want to see ActiveDataFlow integrated into Rails, so that I understand how to use it in my own applications.
 
 #### Acceptance Criteria
 
-1. THE Demo App SHALL mount the ActiveDataflow Rails engine
+1. THE Demo App SHALL mount the ActiveDataFlow Rails engine
 2. THE Demo App SHALL include at least one custom DataFlow class
 3. THE Demo App SHALL configure the heartbeat runtime
 4. THE Demo App SHALL use ActiveRecord source and sink connectors
@@ -62,7 +62,7 @@ See: `../../glossary.md` for shared terminology
 2. THE Demo App SHALL display DataFlow execution history
 3. THE Demo App SHALL allow manual triggering of DataFlows
 4. THE Demo App SHALL show execution status and errors
-5. THE Demo App SHALL use the ActiveDataflow engine views
+5. THE Demo App SHALL use the ActiveDataFlow engine views
 
 ### Requirement 5: Documentation and Setup
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Heartbeat Runtime provides a Ruby module for executing DataFlows via periodic HTTP endpoint triggers. This subgem implements the `ActiveDataflow::Runtime::Heartbeat` runtime and integrates with Rails applications.
+The Heartbeat Runtime provides a Ruby module for executing DataFlows via periodic HTTP endpoint triggers. This subgem implements the `ActiveDataFlow::Runtime::Heartbeat` runtime and integrates with Rails applications.
 
 See: `../../../../../.kiro/specs/requirements.md` - Requirement 5 (Heartbeat Runtime)
 See: `../../../../../.kiro/specs/design.md` - Section 4 (Runtime Abstractions)

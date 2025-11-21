@@ -34,7 +34,7 @@ add .
     - _Requirements: 7.3, 7.4, 7.5_
 
 - [ ] 5. Create main gem entry point
-  - [ ] 5.1 Create main ActiveDataflow module file
+  - [ ] 5.1 Create main ActiveDataFlow module file
     - Create `lib/active_data_flow.rb` that requires all core components
     - _Requirements: 8.1_
   - [ ] 5.2 Add error handling classes

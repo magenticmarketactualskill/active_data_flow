@@ -83,7 +83,7 @@ See: `../steering/glossary.md` for shared terminology
 
 #### Acceptance Criteria
 
-1. THE ActiveRecord Source SHALL return ActiveDataflow::Message::Untyped instances
+1. THE ActiveRecord Source SHALL return ActiveDataFlow::Message::Untyped instances
 2. WHEN wrapping a record, THE ActiveRecord Source SHALL convert attributes to a Hash
 3. THE ActiveRecord Source SHALL include model name in message metadata
 4. THE ActiveRecord Source SHALL include record ID in message metadata

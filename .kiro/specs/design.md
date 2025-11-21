@@ -2,7 +2,7 @@
 
 ## Overview
 
-This design implements the ActiveDataflow gem suite for Rails applications. The system provides a modular stream processing framework with pluggable sources, sinks, and runtimes.
+This design implements the ActiveDataFlow gem suite for Rails applications. The system provides a modular stream processing framework with pluggable sources, sinks, and runtimes.
 
 See: `.kiro/specs/requirements.md` for detailed requirements
 See: `.kiro/glossary.md` for term definitions
@@ -15,7 +15,7 @@ See: `.kiro/glossary.md` for term definitions
 ┌─────────────────────────────────────────────────────────┐
 │                    Rails Application                     │
 ├─────────────────────────────────────────────────────────┤
-│                  ActiveDataflow Engine                   │
+│                  ActiveDataFlow Engine                   │
 │  ┌────────────┐  ┌────────────┐  ┌──────────────────┐  │
 │  │Controllers │  │   Models   │  │  Heartbeat       │  │
 │  │            │  │            │  │  Endpoint        │  │
@@ -57,8 +57,8 @@ See: Requirements 1, 4, 8
 **Purpose**: Standardize data containers passed between components
 
 **Classes**:
-- `ActiveDataflow::Message::Typed` - Messages with schema validation
-- `ActiveDataflow::Message::Untyped` - Flexible messages
+- `ActiveDataFlow::Message::Typed` - Messages with schema validation
+- `ActiveDataFlow::Message::Untyped` - Flexible messages
 
 See: Requirement 2
 
@@ -67,12 +67,12 @@ See: Requirement 2
 **Purpose**: Define interfaces for reading/writing external systems
 
 **Base Classes**:
-- `ActiveDataflow::Connector::Source` - Base source with `each` method
-- `ActiveDataflow::Connector::Sink` - Base sink with `write` method
+- `ActiveDataFlow::Connector::Source` - Base source with `each` method
+- `ActiveDataFlow::Connector::Sink` - Base sink with `write` method
 
 **Implementations**:
-- `ActiveDataflow::Connector::Source::ActiveRecord` - Database reading
-- `ActiveDataflow::Connector::Sink::ActiveRecord` - Database writing
+- `ActiveDataFlow::Connector::Source::ActiveRecord` - Database reading
+- `ActiveDataFlow::Connector::Sink::ActiveRecord` - Database writing
 
 See: Requirements 1, 3
 
@@ -81,12 +81,12 @@ See: Requirements 1, 3
 **Purpose**: Define execution environment interfaces
 
 **Base Classes**:
-- `ActiveDataflow::Runtime` - Base runtime class
-- `ActiveDataflow::Runtime::Runner` - Base runner class
+- `ActiveDataFlow::Runtime` - Base runtime class
+- `ActiveDataFlow::Runtime::Runner` - Base runner class
 
 **Implementations**:
-- `ActiveDataflow::Runtime::Heartbeat` - Periodic REST-triggered execution
-- `ActiveDataflow::Runtime::Heartbeat::Runner` - Heartbeat execution logic
+- `ActiveDataFlow::Runtime::Heartbeat` - Periodic REST-triggered execution
+- `ActiveDataFlow::Runtime::Heartbeat::Runner` - Heartbeat execution logic
 
 See: Requirements 4, 5
 
@@ -95,7 +95,7 @@ See: Requirements 4, 5
 **Purpose**: Coordinate source-transform-sink pipelines
 
 **Base Class**:
-- `ActiveDataflow::DataFlow` - Orchestration base class
+- `ActiveDataFlow::DataFlow` - Orchestration base class
 
 **Responsibilities**:
 - Configure sources and sinks

@@ -2,7 +2,7 @@
 
 ## Overview
 
-A complete Rails 8 application demonstrating ActiveDataflow functionality, created as a git submodule. The app showcases a product catalog synchronization use case with data transformation.
+A complete Rails 8 application demonstrating ActiveDataFlow functionality, created as a git submodule. The app showcases a product catalog synchronization use case with data transformation.
 
 See: `requirements.md` for detailed requirements
 See: `../../glossary.md` for terminology
@@ -22,7 +22,7 @@ submodules/examples/rails8-demo/
 │   │   └── product_sync_flow.rb    # Example DataFlow
 │   └── views/
 ├── config/
-│   ├── routes.rb                   # Mount ActiveDataflow engine
+│   ├── routes.rb                   # Mount ActiveDataFlow engine
 │   └── initializers/
 │       └── active_data_flow.rb     # Configure heartbeat
 ├── db/
@@ -69,14 +69,14 @@ end
 
 **ProductSyncFlow**:
 ```ruby
-class ProductSyncFlow < ActiveDataflow::DataFlow
+class ProductSyncFlow < ActiveDataFlow::DataFlow
   def initialize(config)
     super
-    @source = ActiveDataflow::Connector::Source::ActiveRecord.new(
+    @source = ActiveDataFlow::Connector::Source::ActiveRecord.new(
       model: Product,
       scope: ->(r) { r.where(active: true) }
     )
-    @sink = ActiveDataflow::Connector::Sink::ActiveRecord.new(
+    @sink = ActiveDataFlow::Connector::Sink::ActiveRecord.new(
       model: ProductExport
     )
   end
@@ -103,7 +103,7 @@ class ProductSyncFlow < ActiveDataflow::DataFlow
 end
 ```
 
-### 4. ActiveDataflow Configuration
+### 4. ActiveDataFlow Configuration
 
 **Initializer** (`config/initializers/active_data_flow.rb`):
 ```ruby

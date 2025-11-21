@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document specifies how modules in ActiveDataflow relate and what dependencies exist.
+This document specifies how modules in ActiveDataFlow relate and what dependencies exist.
 
 See main requirements: `.kiro/specs/requirements.md` (Requirement 13: Modular Gem Architecture)
 

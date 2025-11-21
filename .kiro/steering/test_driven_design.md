@@ -41,7 +41,7 @@ gem_name/
 ## Example Structure
 
 ```ruby
-RSpec.describe ActiveDataflow::Connector::Source do
+RSpec.describe ActiveDataFlow::Connector::Source do
   describe '#each' do
     context 'when source has data' do
       it 'yields each record' do

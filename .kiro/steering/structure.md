@@ -60,9 +60,9 @@ Some components are developed as separate git submodules under `/submodules/` wh
 
 ### Module Naming
 
-- Core module: `ActiveDataflow`
-- Connectors: `ActiveDataflow::Connector::Source::*` and `ActiveDataflow::Connector::Sink::*`
-- Runtimes: `ActiveDataflow::Runtime::*`
+- Core module: `ActiveDataFlow`
+- Connectors: `ActiveDataFlow::Connector::Source::*` and `ActiveDataFlow::Connector::Sink::*`
+- Runtimes: `ActiveDataFlow::Runtime::*`
 
 ### Gem Naming
 

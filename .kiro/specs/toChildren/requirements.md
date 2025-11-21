@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This document specifies what child components (runtimes and connectors) need to know when implementing ActiveDataflow interfaces.
+This document specifies what child components (runtimes and connectors) need to know when implementing ActiveDataFlow interfaces.
 
 See main requirements: `.kiro/specs/requirements.md`
 
@@ -21,6 +21,6 @@ See: `.kiro/specs/requirements.md` (Requirements 1-6, 15)
 ## Core Interfaces to Implement
 
 Child components must implement the abstract classes defined in the core gem:
-- Runtimes extend `ActiveDataflow::Runtime`
-- Sources extend `ActiveDataflow::Connector::Source`
-- Sinks extend `ActiveDataflow::Connector::Sink`
+- Runtimes extend `ActiveDataFlow::Runtime`
+- Sources extend `ActiveDataFlow::Connector::Source`
+- Sinks extend `ActiveDataFlow::Connector::Sink`

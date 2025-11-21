@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActiveDataflow
+module ActiveDataFlow
   module Runtime
     # Base class for runtime execution environments
     # Subclasses define how DataFlows are executed

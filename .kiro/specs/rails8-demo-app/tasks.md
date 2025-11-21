@@ -8,7 +8,7 @@
   - Set up SQLite database configuration
   - _Requirements: 1.1, 1.2, 1.4_
 
-- [x] 2. Configure ActiveDataflow dependencies
+- [x] 2. Configure ActiveDataFlow dependencies
   - Add active_data_flow gem with path reference to parent
   - Add runtime-heartbeat gem with path reference
   - Add connector-source-active_record gem with path reference
@@ -32,7 +32,7 @@
 - [x] 4. Implement ProductSyncFlow DataFlow
   - [x] 4.1 Create DataFlow class
     - Create app/data_flows directory
-    - Implement ProductSyncFlow class inheriting from ActiveDataflow::DataFlow
+    - Implement ProductSyncFlow class inheriting from ActiveDataFlow::DataFlow
     - Configure ActiveRecord source connector with Product model and active scope
     - Configure ActiveRecord sink connector with ProductExport model
     - _Requirements: 2.2, 3.1, 3.2, 2.4_
@@ -51,7 +51,7 @@
     - Handle errors gracefully with logging
     - _Requirements: 3.5, 6.5_
 
-- [x] 5. Configure ActiveDataflow Rails engine
+- [x] 5. Configure ActiveDataFlow Rails engine
   - [x] 5.1 Create initializer
     - Create config/initializers/active_data_flow.rb
     - Configure authentication_enabled = false for demo

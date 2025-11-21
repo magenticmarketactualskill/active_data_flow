@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module ActiveDataflow
+module ActiveDataFlow
   module Connector
-    module Source
-      # Base class for data sources
-      # Subclasses must implement the #each method to yield records
+    module Sink
+      # Base class for data sinks
+      # Subclasses must implement the #write method to persist records
       class Base
         attr_reader :config
 
@@ -13,10 +13,10 @@ module ActiveDataflow
           validate_config!
         end
 
-        # Yields records from the source
+        # Writes a record to the sink
         # Subclasses must implement this method
-        def each
-          raise NotImplementedError, "#{self.class} must implement #each method"
+        def write(record)
+          raise NotImplementedError, "#{self.class} must implement #write method"
         end
 
         private

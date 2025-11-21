@@ -59,7 +59,7 @@ From parent requirements (Requirement 3):
 
 - **Memory Efficient**: Uses `find_each` for batched loading
 - **Flexible Filtering**: Supports custom ActiveRecord scopes
-- **Message Wrapping**: Returns `ActiveDataflow::Message::Untyped` with metadata
+- **Message Wrapping**: Returns `ActiveDataFlow::Message::Untyped` with metadata
 - **Configurable Batching**: Adjustable batch size (default: 1000)
 - **Record Counting**: Efficient count method respecting scopes
 

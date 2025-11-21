@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActiveDataflow
+module ActiveDataFlow
   module Message
     # Typed message with schema validation
     # Ensures data conforms to a defined schema

@@ -2,13 +2,13 @@
 
 ## Introduction
 
-This document specifies what parent applications (users of ActiveDataflow) need to know.
+This document specifies what parent applications (users of ActiveDataFlow) need to know.
 
 ## Key Information for Parents
 
 See main requirements: `.kiro/specs/requirements.md`
 
-### What ActiveDataflow Provides
+### What ActiveDataFlow Provides
 
 - A new top-level folder `./data_flow` where developers define SOURCE, SINK, and RUNTIME characteristics
 - Controllers for managing and monitoring DataFlows

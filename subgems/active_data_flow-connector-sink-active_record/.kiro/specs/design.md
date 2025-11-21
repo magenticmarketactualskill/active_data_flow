@@ -2,7 +2,7 @@
 
 ## Overview
 
-The ActiveRecord sink connector provides a concrete implementation of `ActiveDataflow::Connector::Sink::Base` for writing data to database tables using ActiveRecord models.
+The ActiveRecord sink connector provides a concrete implementation of `ActiveDataFlow::Connector::Sink::Base` for writing data to database tables using ActiveRecord models.
 
 See: `parent_requirements.md` - Requirement 3 (ActiveRecord Connector Implementation)
 See: `parent_design.md` - Section 3 (Connector Abstractions)
@@ -13,8 +13,8 @@ See: `requirements.md` for sink-specific requirements
 ### Class Hierarchy
 
 ```
-ActiveDataflow::Connector::Sink::Base (from core)
-  └── ActiveDataflow::Connector::Sink::ActiveRecord (this gem)
+ActiveDataFlow::Connector::Sink::Base (from core)
+  └── ActiveDataFlow::Connector::Sink::ActiveRecord (this gem)
 ```
 
 ### Key Components
@@ -38,22 +38,22 @@ ActiveDataflow::Connector::Sink::Base (from core)
 ### Supported Input Formats
 
 - `Hash` - Direct data
-- `ActiveDataflow::Message::Untyped` - Extracts `.data`
-- `ActiveDataflow::Message::Typed` - Extracts `.data`
+- `ActiveDataFlow::Message::Untyped` - Extracts `.data`
+- `ActiveDataFlow::Message::Typed` - Extracts `.data`
 
 ## Usage Examples
 
 ### Basic Usage
 
 ```ruby
-sink = ActiveDataflow::Connector::Sink::ActiveRecord.new(model: Product)
+sink = ActiveDataFlow::Connector::Sink::ActiveRecord.new(model: Product)
 sink.write({ name: "Widget", price: 19.99 })
 ```
 
 ### Batch Usage
 
 ```ruby
-sink = ActiveDataflow::Connector::Sink::ActiveRecord.new(model: "Product")
+sink = ActiveDataFlow::Connector::Sink::ActiveRecord.new(model: "Product")
 sink.write_batch([
   { name: "Widget", price: 19.99 },
   { name: "Gadget", price: 29.99 }
@@ -63,7 +63,7 @@ sink.write_batch([
 ### With Messages
 
 ```ruby
-message = ActiveDataflow::Message::Untyped.new({ name: "Widget", price: 19.99 })
+message = ActiveDataFlow::Message::Untyped.new({ name: "Widget", price: 19.99 })
 sink.write(message)
 ```
 

@@ -1,10 +1,10 @@
 # Glossary
 
-This glossary defines key terms used throughout the ActiveDataflow project.
+This glossary defines key terms used throughout the ActiveDataFlow project.
 
 ## Core Terms
 
-- **ActiveDataflow**: The Ruby module namespace for the active_data_flow gem suite
+- **ActiveDataFlow**: The Ruby module namespace for the active_data_flow gem suite
 - **Source**: A component that reads data from external systems (e.g., databases, files, streams)
 - **Sink**: A component that writes data to external systems (e.g., databases, caches, files)
 - **Runtime**: An execution environment for DataFlows that determines how and when they run
@@ -25,8 +25,8 @@ This glossary defines key terms used throughout the ActiveDataflow project.
 
 ## Message Types
 
-- **Typed Message**: A message with schema validation (`ActiveDataflow::Message::Typed`)
-- **Untyped Message**: A message for flexible data handling (`ActiveDataflow::Message::Untyped`)
+- **Typed Message**: A message with schema validation (`ActiveDataFlow::Message::Typed`)
+- **Untyped Message**: A message for flexible data handling (`ActiveDataFlow::Message::Untyped`)
 
 ## Implementation Terms
 

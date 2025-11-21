@@ -11,9 +11,9 @@ ActiveDataFlow is a modular stream processing framework for Ruby inspired by Apa
 
 ## Message Types
 
-All data flows work with `ActiveDataflow::Message` instances:
-- `ActiveDataflow::Message::Typed` - Typed messages with schema validation
-- `ActiveDataflow::Message::Untyped` - Untyped messages for flexible data handling
+All data flows work with `ActiveDataFlow::Message` instances:
+- `ActiveDataFlow::Message::Typed` - Typed messages with schema validation
+- `ActiveDataFlow::Message::Untyped` - Untyped messages for flexible data handling
 
 ## Architecture Philosophy
 

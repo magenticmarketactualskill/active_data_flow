@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ActiveDataflow
+module ActiveDataFlow
   module Message
     # Untyped message for flexible data handling
     # Allows passing arbitrary data between sources, transforms, and sinks
