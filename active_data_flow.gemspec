@@ -22,7 +22,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Rails engine support
-  spec.add_dependency "rails", ">= 6.0"
+  spec.add_runtime_dependency "rails", ">= 6.0"
+
+  # Subgems
+  spec.add_runtime_dependency "active_data_flow-connector-source-active_record"
+  spec.add_runtime_dependency "active_data_flow-connector-sink-active_record"
+  spec.add_runtime_dependency "active_data_flow-runtime-heartbeat"
 
   # Development dependencies
   spec.add_development_dependency "bundler"
@@ -31,8 +36,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sqlite3", ">= 1.4"
   spec.add_development_dependency "rubocop", "~> 1.50"
   
-  # Subgem path references for local development
-  spec.add_development_dependency "active_data_flow-connector-source-active_record"
-  spec.add_development_dependency "active_data_flow-connector-sink-active_record"
-  spec.add_development_dependency "active_data_flow-runtime-heartbeat"
 end

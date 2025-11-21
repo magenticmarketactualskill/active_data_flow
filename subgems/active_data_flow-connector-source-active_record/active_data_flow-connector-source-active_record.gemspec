@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative "lib/active_data_flow/active_record/version"
+require_relative "lib/active_data_flow/connector/source/active_record/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "active_data_flow-connector-sink-active_record"
-  spec.version = ActiveDataFlow::Connector::Sink::ActiveRecord::VERSION
+  spec.name = "active_data_flow-connector-source-active_record"
+  spec.version = ActiveDataFlow::Connector::Source::ActiveRecord::VERSION
   spec.authors = ["ActiveDataFlow Team"]
   spec.email = ["team@activedataflow.dev"]
 
