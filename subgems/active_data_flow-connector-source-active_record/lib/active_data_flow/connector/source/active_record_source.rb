@@ -19,11 +19,10 @@ module ActiveDataFlow
 
           # extract model for serialization
           @model_class = scope.model
-          @scope = scope
-          @scope_name = nil
+          @scope_name = scope.name
           @scope_params = []
           
-          @batch_size = batch_size
+          @batch_size ||= 5
           
           # Store serializable representation
           super(
@@ -35,11 +34,7 @@ module ActiveDataFlow
         end
 
         def each(&block)
-          if batch_size
-            scope.find_each(batch_size: batch_size, &block)
-          else
-            scope.each(&block)
-          end
+          scope.find_each(batch_size: batch_size, &block)
         end
 
         def close
@@ -51,11 +46,7 @@ module ActiveDataFlow
         attr_reader :scope
         
         def build_scope
-          if scope_name
-            model_class.public_send(scope_name, *scope_params)
-          else
-            model_class.all
-          end
+          model_class.public_send(scope_name, *scope_params)
         end
         
         # Override deserialization to reconstruct scope

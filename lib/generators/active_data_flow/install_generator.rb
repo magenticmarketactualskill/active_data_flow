@@ -20,6 +20,11 @@ module ActiveDataFlow
                           "db/migrate/create_active_data_flow_data_flows.rb"
       end
 
+      def create_data_flows_directory
+        empty_directory "app/data_flows"
+        create_file "app/data_flows/.keep"
+      end
+
       def mount_engine
         route 'mount ActiveDataFlow::Engine => "/active_data_flow"'
       end

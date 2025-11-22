@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_data_flow/version"
+require "active_data_flow/configuration"
 require "active_data_flow/engine"
 require "active_data_flow/railtie" if defined?(Rails::Railtie)
 
@@ -11,4 +12,4 @@ require "active_data_flow/runtime/base"
 
 require "active_data_flow/message"
 require "active_data_flow/connector"
-require "active_data_flow/runtime"
+require "active_data_flow/runtime"require "active_data_flow/active_record_to_active_record"

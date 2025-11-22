@@ -1,0 +1,39 @@
+# frozen_string_literal: true
+
+class <%= class_name %>Flow
+  # Option 1: Use the ActiveRecord2ActiveRecord concern for a DSL approach
+  # include ActiveDataFlow::ActiveRecord2ActiveRecord
+  #
+  # source SourceModel.where(active: true), batch_size: 100
+  # sink DestinationModel, batch_size: 100
+  # runtime ActiveDataFlow::Runtime::Base.new(interval: 3600)
+  # register name: "<%= file_name %>"
+
+  # Option 2: Define manually with more control
+  def self.register
+    source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
+      model_class: SourceModel,
+      scope_name: :active,
+      batch_size: 100
+    )
+
+    sink = ActiveDataFlow::Connector::Sink::ActiveRecordSink.new(
+      model_class: DestinationModel,
+      batch_size: 100
+    )
+
+    runtime = ActiveDataFlow::Runtime::Base.new(
+      interval: 3600
+    )
+
+    ActiveDataFlow::DataFlow.find_or_create(
+      name: "<%= file_name %>",
+      source: source,
+      sink: sink,
+      runtime: runtime
+    )
+  end
+end
+
+# Auto-register when loaded
+<%= class_name %>Flow.register if defined?(Rails)

@@ -27,6 +27,7 @@ rails generate active_data_flow:install
 This will:
 - Copy migrations to your application
 - Mount the engine in your routes
+- Create the `app/data_flows` directory
 - Display setup instructions
 
 Run the migrations:
@@ -34,6 +35,25 @@ Run the migrations:
 ```bash
 rails db:migrate
 ```
+
+## Configuration
+
+Configure ActiveDataFlow in `config/initializers/active_data_flow.rb`:
+
+```ruby
+ActiveDataFlow.configure do |config|
+  # Enable/disable automatic loading of data flows
+  config.auto_load_data_flows = true
+
+  # Set log level for data flow loading
+  config.log_level = :info  # :debug, :info, :warn, :error
+
+  # Set the path where data flows are located
+  config.data_flows_path = "app/data_flows"
+end
+```
+
+**Important:** Data flows are loaded AFTER Rails initialization completes, not during `Rails::Application#initialize`. This ensures all dependencies (models, gems, etc.) are available before data flows are loaded.
 
 ## Usage
 
@@ -52,6 +72,34 @@ Rails.application.routes.draw do
   mount ActiveDataFlow::Engine => "/active_data_flow"
 end
 ```
+
+### Organizing Data Flows
+
+Data flows are automatically loaded from `app/data_flows/`. Generate a new data flow:
+
+```bash
+rails generate active_data_flow:data_flow user_sync
+```
+
+This creates `app/data_flows/user_sync_flow.rb` where you can define your data flow.
+
+### Using the ActiveRecord2ActiveRecord Concern
+
+For ActiveRecord-to-ActiveRecord data flows, you can use the provided concern for a cleaner DSL:
+
+```ruby
+class UserSyncFlow
+  include ActiveDataFlow::ActiveRecord2ActiveRecord
+
+  source User.where(active: true), batch_size: 100
+  sink UserBackup, batch_size: 100
+  runtime ActiveDataFlow::Runtime::Base.new(interval: 3600)
+  
+  register name: "user_sync"
+end
+```
+
+The concern provides class methods for defining source, sink, and runtime, then registers the data flow automatically.
 
 ### Creating Data Flows
 
