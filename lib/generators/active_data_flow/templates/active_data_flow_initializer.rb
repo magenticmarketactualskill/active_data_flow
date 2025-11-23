@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 # ActiveDataFlow Configuration
-# Data flows are automatically loaded AFTER Rails initialization completes
-# This ensures all dependencies are available before loading data flows
+# Customize the behavior of ActiveDataFlow in your application
 
 ActiveDataFlow.configure do |config|
   # Enable/disable automatic loading of data flows
+  # When enabled, data flows in app/data_flows/ are automatically loaded and registered
   # Default: true
   config.auto_load_data_flows = true
 

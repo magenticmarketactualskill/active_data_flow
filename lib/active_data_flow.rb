@@ -12,4 +12,7 @@ require "active_data_flow/runtime/base"
 
 require "active_data_flow/message"
 require "active_data_flow/connector"
-require "active_data_flow/runtime"require "active_data_flow/active_record_to_active_record"
+require "active_data_flow/runtime"
+
+# Load concerns (only in Rails context)
+require "active_data_flow/concerns" if defined?(Rails)

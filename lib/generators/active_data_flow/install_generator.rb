@@ -25,6 +25,11 @@ module ActiveDataFlow
         create_file "app/data_flows/.keep"
       end
 
+      def copy_initializer
+        copy_file "active_data_flow_initializer.rb",
+                  "config/initializers/active_data_flow.rb"
+      end
+
       def mount_engine
         route 'mount ActiveDataFlow::Engine => "/active_data_flow"'
       end

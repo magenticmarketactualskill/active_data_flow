@@ -35,5 +35,5 @@ class UserSyncFlow
   end
 end
 
-# Auto-register when loaded
-UserSyncFlow.register if defined?(Rails)
+# Note: The .register method is automatically called by config/initializers/data_flows.rb
+# after ActiveRecord is available. You don't need to call it manually.

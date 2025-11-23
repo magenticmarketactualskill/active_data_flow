@@ -16,6 +16,8 @@ And then execute:
 bundle install
 ```
 
+**Note:** Generators are only available when the gem is installed in a Rails application. Run `rails generate --help | grep active_data_flow` to see available generators.
+
 ## Setup
 
 Run the install generator:
@@ -38,7 +40,7 @@ rails db:migrate
 
 ## Configuration
 
-Configure ActiveDataFlow in `config/initializers/active_data_flow.rb`:
+The install generator creates `config/initializers/active_data_flow.rb` where you can customize behavior:
 
 ```ruby
 ActiveDataFlow.configure do |config|
@@ -53,7 +55,7 @@ ActiveDataFlow.configure do |config|
 end
 ```
 
-**Important:** Data flows are loaded AFTER Rails initialization completes, not during `Rails::Application#initialize`. This ensures all dependencies (models, gems, etc.) are available before data flows are loaded.
+**Important:** Data flows are automatically loaded and registered by the engine AFTER Rails initialization completes and ActiveRecord is available. This ensures all dependencies (models, gems, etc.) are loaded before data flows are registered.
 
 ## Usage
 
@@ -103,7 +105,7 @@ The concern provides class methods for defining source, sink, and runtime, then 
 
 ### Creating Data Flows
 
-Data flows can be created programmatically by passing actual source, sink, and runtime instances:
+Data flows are automatically registered when the application starts. Define a class with a `register` method:
 
 ```ruby
 # Option 1: Using named scopes (serializable - recommended for persistence)
