@@ -1,1 +1,0 @@
-../../../../.kiro/specs/requirements.md
