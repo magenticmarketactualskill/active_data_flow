@@ -6,27 +6,27 @@ This document verifies the submoduler configuration for the ActiveDataFlow proje
 
 Location: `.submoduler.ini`
 
-## Subgems (In-Repo Components)
+## Submodules (Component Repositories)
 
-Subgems are managed within the active_data_flow repository in the `subgems/` directory.
+All components are now managed as git submodules in the `submodules/` directory.
 
 ### 1. active_data_flow-connector-sink-active_record
-- **Path:** `subgems/active_data_flow-connector-sink-active_record`
+- **Path:** `submodules/active_data_flow-connector-sink-active_record`
 - **URL:** `https://github.com/magenticmarketactualskill/active_data_flow-connector-sink-active_record`
 - **Status:** ✅ Directory exists
-- **Type:** Subgem (in-repo)
+- **Type:** Git submodule
 
 ### 2. active_data_flow-connector-source-active_record
-- **Path:** `subgems/active_data_flow-connector-source-active_record`
+- **Path:** `submodules/active_data_flow-connector-source-active_record`
 - **URL:** `https://github.com/magenticmarketactualskill/active_data_flow-connector-source-active_record`
 - **Status:** ✅ Directory exists
-- **Type:** Subgem (in-repo)
+- **Type:** Git submodule
 
 ### 3. active_data_flow-runtime-heartbeat
-- **Path:** `subgems/active_data_flow-runtime-heartbeat`
+- **Path:** `submodules/active_data_flow-runtime-heartbeat`
 - **URL:** `https://github.com/magenticmarketactualskill/active_data_flow-runtime-heartbeat`
 - **Status:** ✅ Directory exists
-- **Type:** Subgem (in-repo)
+- **Type:** Git submodule
 
 ## Submodules (External Repos)
 
@@ -53,9 +53,9 @@ git submodule status
 
 Note: The `+` indicates uncommitted changes in the submodule (normal during development).
 
-### Verify Subgem Directories
+### Verify Submodule Directories
 ```bash
-ls -la subgems/
+ls -la submodules/
 ```
 
 **Expected directories:**
@@ -73,10 +73,10 @@ ls -la submodules/examples/
 
 ## Configuration Validation
 
-### Subgem Configuration Format
+### Submodule Configuration Format
 ```ini
-[subgem "subgems/path-to-subgem"]
-	path = subgems/path-to-subgem
+[submodule "submodules/path-to-submodule"]
+	path = submodules/path-to-submodule
 	url = https://github.com/org/repo-name
 ```
 
@@ -119,14 +119,14 @@ git add submodules/examples/rails8-demo
 git commit -m "Update rails8-demo submodule"
 ```
 
-### Issue: Subgem Directory Missing
+### Issue: Submodule Directory Missing
 
-**Symptom:** Directory doesn't exist in `subgems/`
+**Symptom:** Directory doesn't exist in `submodules/`
 
 **Solution:**
-Subgems are part of the main repository. If missing:
-1. Check if you're on the correct branch
-2. Pull latest changes: `git pull`
+Submodules need to be initialized. If missing:
+1. Initialize submodules: `git submodule update --init --recursive`
+2. Pull latest changes: `git pull && git submodule update --remote`
 3. Check if directory was accidentally deleted
 
 ### Issue: URL Mismatch
@@ -140,15 +140,15 @@ Subgems are part of the main repository. If missing:
 
 ## Best Practices
 
-1. **Subgems** - Use for components that are tightly coupled to the main gem
-2. **Submodules** - Use for examples or loosely coupled components
+1. **Submodules** - All components are now managed as git submodules
+2. **Initialize submodules** - Always run `git submodule update --init --recursive` after cloning
 3. **Keep .submoduler.ini in sync** - Update when adding/removing components
 4. **Document URLs** - Ensure GitHub repositories exist before adding to config
 5. **Test after changes** - Verify submodules can be cloned: `git submodule update --init`
 
 ## Current Status Summary
 
-✅ All subgems are present and correctly configured
+✅ All submodules are present and correctly configured
 ✅ All submodules are initialized and checked out
 ✅ .submoduler.ini configuration is valid
 ✅ Directory structure matches configuration
