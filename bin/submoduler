@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Wrapper script for submoduler_master.rb
+# This allows running submoduler commands from the project root
+
+require 'pathname'
+
+# Get the project root directory
+project_root = Pathname.new(__FILE__).dirname.parent
+
+# Path to the actual submoduler script
+submoduler_script = project_root.join('vendor', 'submoduler_parent', 'bin', 'submoduler_parent.rb')
+
+unless submoduler_script.exist?
+  puts "Error: Submoduler script not found at #{submoduler_script}"
+  exit 1
+end
+
+# Execute the submoduler script with all arguments
+exec('ruby', submoduler_script.to_s, *ARGV)

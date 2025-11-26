@@ -17,6 +17,11 @@ module ActiveDataFlow
       )
     }
     
+    # Tell Rails how to generate routes for this model
+    def self.model_name
+      @_model_name ||= ActiveModel::Name.new(self, ActiveDataFlow, "data_flow")
+    end
+    
     def self.find_or_create(name:, source:, sink:, runtime:)
       flow = find_or_initialize_by(name: name)
       flow.source = source.as_json
