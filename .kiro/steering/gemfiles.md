@@ -7,7 +7,7 @@
 The active_data_flow gem includes in its Gemfile:
 
 ```ruby
-gem 'submoduler-core-submoduler_parent', git: 'https://github.com/magenticmarketactualskill/submoduler-core-submoduler_child.git'
+gem 'submoduler-submoduler_parent', git: 'https://github.com/magenticmarketactualskill/submoduler-submoduler_parent.git'
 ```
 
 ### Submodules (active_data_flow-*)
@@ -15,7 +15,7 @@ gem 'submoduler-core-submoduler_parent', git: 'https://github.com/magenticmarket
 Each submodule with a name that starts with 'active_data_flow-' includes in its Gemfile:
 
 ```ruby
-gem 'submoduler-core-submoduler_child', git: 'https://github.com/magenticmarketactualskill/submoduler-core-submoduler_child.git'
+gem 'submoduler-submoduler_child', git: 'https://github.com/magenticmarketactualskill/submoduler-submoduler_child.git'
 ```
 
 **Note**: Submodules use `submoduler_child` (not `submoduler_parent`)
@@ -53,7 +53,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # Submoduler child gem
-gem 'submoduler-core-submoduler_child', git: 'https://github.com/magenticmarketactualskill/submoduler-core-submoduler_child.git'
+gem 'submoduler-submoduler_child', git: 'https://github.com/magenticmarketactualskill/submoduler-submoduler_child.git'
 
 gemspec
 ```
