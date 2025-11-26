@@ -10,7 +10,7 @@ require 'pathname'
 project_root = Pathname.new(__FILE__).dirname.parent
 
 # Path to the actual submoduler script
-submoduler_script = project_root.join('vendor', 'submoduler_parent', 'bin', 'submoduler_parent.rb')
+submoduler_script = project_root.join('bin', 'submoduler_parent.rb')
 
 unless submoduler_script.exist?
   puts "Error: Submoduler script not found at #{submoduler_script}"
