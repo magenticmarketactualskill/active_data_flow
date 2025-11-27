@@ -28,12 +28,8 @@ module ActiveDataFlow
         end
 
         def heartbeat
-          this_result = ActiveDataFlow::heartbeat::ThisHeartbeat.call
-          next_result = ActiveDataFlow::heartbeat::NextHeartbeat.call
-          render json: {
-            this_result: this_result,
-            next_result: next_result
-          }
+          result = ActiveDataFlow::Scheduler::NextHeartbeat.call
+          render json: result
         rescue => e
           Rails.logger.error "[Heartbeat] Heartbeat failed: #{e.message}"
           Rails.logger.error e.backtrace.first(10).join("\n")

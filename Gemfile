@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # Submoduler parent gem
-gem 'submoduler-submoduler_parent', git: 'https://github.com/magenticmarketactualskill/submoduler-submoduler_parent.git'
+gem 'submoduler-submoduler_parent', path: 'vendor/submoduler_parent'
 
 # Load dependencies from gemspec
 gemspec
@@ -14,3 +14,7 @@ gemspec
 gem 'active_data_flow-connector-source-active_record', path: 'submodules/active_data_flow-connector-source-active_record'
 gem 'active_data_flow-connector-sink-active_record', path: 'submodules/active_data_flow-connector-sink-active_record'
 gem 'active_data_flow-runtime-heartbeat', path: 'submodules/active_data_flow-runtime-heartbeat'
+gem 'rainbow', '~> 3.0'
+gem 'octokit', '~> 4.0'
+gem 'inifile', '~> 3.0'
+

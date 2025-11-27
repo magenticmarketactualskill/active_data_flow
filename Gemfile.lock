@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/magenticmarketactualskill/submoduler-core-submoduler_parent.git
-  revision: b2452e0b6b4f261f13d9aea1871a9f731dacee64
-  specs:
-    submoduler-core-submoduler_parent (0.2.0)
-
 PATH
   remote: .
   specs:
@@ -32,6 +26,11 @@ PATH
   specs:
     active_data_flow-runtime-heartbeat (0.1.1)
       rails (>= 6.0)
+
+PATH
+  remote: vendor/submoduler_parent
+  specs:
+    submoduler-submoduler_parent (0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -110,6 +109,8 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
+    addressable (2.8.8)
+      public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
     bigdecimal (3.3.1)
@@ -122,10 +123,17 @@ GEM
     drb (2.2.3)
     erb (6.0.0)
     erubi (1.13.1)
+    faraday (2.14.0)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-net_http (3.4.2)
+      net-http (~> 0.5)
     globalid (1.3.0)
       activesupport (>= 6.1)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    inifile (3.0.0)
     io-console (0.8.1)
     irb (1.15.3)
       pp (>= 0.6.0)
@@ -147,6 +155,8 @@ GEM
     marcel (1.1.0)
     mini_mime (1.1.5)
     minitest (5.26.2)
+    net-http (0.8.0)
+      uri (>= 0.11.1)
     net-imap (0.5.12)
       date
       net-protocol
@@ -159,6 +169,9 @@ GEM
     nio4r (2.7.5)
     nokogiri (1.18.10-arm64-darwin)
       racc (~> 1.4)
+    octokit (4.25.1)
+      faraday (>= 1, < 3)
+      sawyer (~> 0.9)
     parallel (1.27.0)
     parser (3.3.10.0)
       ast (~> 2.4.1)
@@ -170,6 +183,7 @@ GEM
     psych (5.2.6)
       date
       stringio
+    public_suffix (7.0.0)
     racc (1.8.1)
     rack (3.2.4)
     rack-session (2.1.1)
@@ -254,6 +268,9 @@ GEM
       parser (>= 3.3.7.2)
       prism (~> 1.4)
     ruby-progressbar (1.13.0)
+    sawyer (0.9.3)
+      addressable (>= 2.3.5)
+      faraday (>= 0.17.3, < 3)
     securerandom (0.4.1)
     sqlite3 (2.8.0-arm64-darwin)
     stringio (3.1.8)
@@ -282,11 +299,14 @@ DEPENDENCIES
   active_data_flow-connector-source-active_record!
   active_data_flow-runtime-heartbeat!
   bundler
+  inifile (~> 3.0)
+  octokit (~> 4.0)
+  rainbow (~> 3.0)
   rspec (~> 3.12)
   rspec-rails (~> 6.0)
   rubocop (~> 1.50)
   sqlite3 (>= 1.4)
-  submoduler-core-submoduler_parent!
+  submoduler-submoduler_parent!
 
 BUNDLED WITH
    2.6.9
