@@ -14,5 +14,6 @@ require "active_data_flow/message"
 require "active_data_flow/connector"
 require "active_data_flow/runtime"
 
-# Load concerns (only in Rails context)
+# Load concerns and scheduler (only in Rails context)
 require "active_data_flow/concerns" if defined?(Rails)
+require "active_data_flow/scheduler" if defined?(Rails)

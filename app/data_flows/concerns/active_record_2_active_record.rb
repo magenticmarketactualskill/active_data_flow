@@ -11,8 +11,10 @@ module ActiveDataFlow
     end
 
     class_methods do
-      def source(scope)
-        self._source_config = { scope: scope }
+      def source(scope, scope_name: nil)
+        # Try to infer scope name from the calling context
+        inferred_name = scope_name || infer_scope_name_from_caller
+        self._source_config = { scope: scope, scope_name: inferred_name }
       end
 
       def sink(model_class)
@@ -39,6 +41,7 @@ module ActiveDataFlow
 
         source_obj = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
           scope: source_config[:scope],
+          scope_name: source_config[:scope_name],
           batch_size: batch_size
         )
 
@@ -71,6 +74,23 @@ module ActiveDataFlow
         
         data_flow
       end
+
+      private
+
+      def infer_scope_name_from_caller
+        # Parse the caller stack to find the scope name
+        caller_locations.each do |location|
+          if location.path.include?('_flow.rb')
+            # Read the line that called source
+            line = File.readlines(location.absolute_path)[location.lineno - 1]
+            # Extract scope name like "Product.active" -> "active"
+            if line =~ /source\s+\w+\.(\w+)/
+              return $1
+            end
+          end
+        end
+        nil
+      end
     end
 
     def initialize
@@ -83,6 +103,7 @@ module ActiveDataFlow
       
       @source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
         scope: source_config[:scope],
+        scope_name: source_config[:scope_name],
         batch_size: batch_size
       )
       
