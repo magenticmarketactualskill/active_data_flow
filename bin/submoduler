@@ -6,7 +6,6 @@
 # context and delegates to the appropriate CLI.
 
 require 'pathname'
-require 'inifile'
 
 # Determine project root (one level up from bin/)
 PROJECT_ROOT = File.expand_path('..', __dir__)
@@ -22,6 +21,7 @@ begin
   require 'submoduler_common/command'
   require 'submoduler_common/logger'
   require 'submoduler_common/git_helper'
+  require 'submoduler_common/submoduler_ini'
   require 'submoduler_parent'
   require 'submoduler_child'
 rescue LoadError => e
@@ -33,25 +33,13 @@ end
 # Detect whether we're in a parent or child context
 # by examining the .submoduler.ini configuration
 def detect_context
-  config_file = File.join(Dir.pwd, '.submoduler.ini')
-  
-  return :parent unless File.exist?(config_file)
+  ini = SubmodulerCommon::SubmodulerIni.new
+  return :parent unless ini.exist?
   
   begin
-    ini = IniFile.load(config_file)
-    return :parent unless ini
-    
-    # Check if this is a child submodule
-    # Child configs have either type='child' or a childname field
-    submoduler_section = ini['submoduler']
-    if submoduler_section
-      return :child if submoduler_section['type'] == 'child'
-      return :child if submoduler_section['childname']
-    end
-    
-    # Default to parent if config exists but doesn't indicate child
-    :parent
-  rescue StandardError => e
+    ini.load_config
+    ini.type
+  rescue SubmodulerCommon::SubmodulerIni::ConfigError => e
     # If config parsing fails, default to parent and let CLI handle validation
     warn "Warning: Failed to parse .submoduler.ini: #{e.message}"
     :parent
