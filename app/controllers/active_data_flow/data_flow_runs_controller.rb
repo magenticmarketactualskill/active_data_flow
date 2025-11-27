@@ -2,15 +2,14 @@
 
 module ActiveDataFlow
   class DataFlowRunsController < ApplicationController
+    layout 'application'
     before_action :set_data_flow_run, only: [:show]
     before_action :set_data_flow, only: [:index, :create]
 
     def index
       @data_flow_runs = @data_flow.data_flow_runs
                                   .includes(:data_flow)
-                                  .order(created_at: :desc)
-                                  .page(params[:page])
-                                  .per(20)
+                                  .order(created_at: :desc).limit(20)
     end
 
     def show

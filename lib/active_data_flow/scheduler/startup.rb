@@ -28,6 +28,7 @@ module ActiveDataFlow
         
         load_engine_concerns
         load_host_concerns_and_flows
+        change_pending_to_canceled
         create_initial_runs
         
         puts "[ActiveDataFlow] Initialization complete"
@@ -131,6 +132,17 @@ module ActiveDataFlow
           started_at: Time.current,
           run_after: next_run
         )
+      end
+
+      # Cancel all pending runs that are overdue or stale from previous sessions
+      def change_pending_to_canceled
+        # Find pending runs that are significantly overdue (more than 1 hour past their run_after time)
+        overdue_runs = DataFlowRun.pending.where('run_after < ?', 1.hour.ago)
+        canceled_count = overdue_runs.update_all(status: 'cancelled')
+        
+        if canceled_count > 0
+          puts "[ActiveDataFlow] Canceled #{canceled_count} overdue pending run(s)"
+        end
       end
     end
   end
