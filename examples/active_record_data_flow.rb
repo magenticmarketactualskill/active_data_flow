@@ -11,10 +11,17 @@ require "active_data_flow"
 
 puts "=== ActiveRecord Source Connector ==="
 puts
-puts "The source can be created in two ways:"
+puts "Sources MUST use named scopes for serializability:"
 puts
-puts "1. Using named scopes (serializable - recommended):"
+puts "Basic usage:"
 puts <<~RUBY
+  # Define scopes in your model
+  class User < ApplicationRecord
+    scope :active, -> { where(active: true) }
+    scope :created_after, ->(date) { where("created_at > ?", date) }
+  end
+  
+  # Create source using named scope
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
     model_class: User,
     scope_name: :active  # Calls User.active
@@ -26,19 +33,6 @@ puts <<~RUBY
     scope_name: :created_after,
     scope_params: [1.week.ago]
   )
-RUBY
-
-puts
-puts "2. Using a scope directly (for immediate use):"
-puts <<~RUBY
-  source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
-    scope: User.where(active: true).order(:created_at)
-  )
-  
-  # Iterate over records
-  source.each do |user|
-    puts user.email
-  end
 RUBY
 
 puts
@@ -65,14 +59,14 @@ RUBY
 puts
 puts "=== Complete Data Flow Example ==="
 puts
-puts "Using named scopes (serializable):"
+puts "Complete example with named scopes:"
 puts <<~RUBY
   # Define a scope in your model
   class User < ApplicationRecord
     scope :recently_active, -> { where("last_login_at > ?", 30.days.ago) }
   end
   
-  # Create source using the named scope
+  # Create source using the named scope (required for persistence)
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
     model_class: User,
     scope_name: :recently_active
@@ -96,17 +90,21 @@ puts <<~RUBY
 RUBY
 
 puts
-puts "Using direct scope (for immediate execution):"
+puts "Complex scopes with chaining:"
 puts <<~RUBY
-  source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
-    scope: User.where(active: true)
-               .where("last_login_at > ?", 30.days.ago)
-               .includes(:profile)
-               .order(:created_at)
-  )
-  
-  # Use immediately (runtime will control batch_size)
-  source.each do |user|
-    # Process user
+  # Define complex scope in your model
+  class User < ApplicationRecord
+    scope :recently_active_with_profile, -> {
+      where(active: true)
+        .where("last_login_at > ?", 30.days.ago)
+        .includes(:profile)
+        .order(:created_at)
+    }
   end
+  
+  # Use the named scope
+  source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
+    model_class: User,
+    scope_name: :recently_active_with_profile
+  )
 RUBY
