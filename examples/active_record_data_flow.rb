@@ -17,16 +17,14 @@ puts "1. Using named scopes (serializable - recommended):"
 puts <<~RUBY
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
     model_class: User,
-    scope_name: :active,  # Calls User.active
-    batch_size: 100
+    scope_name: :active  # Calls User.active
   )
   
   # With parameters
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
     model_class: User,
     scope_name: :created_after,
-    scope_params: [1.week.ago],
-    batch_size: 100
+    scope_params: [1.week.ago]
   )
 RUBY
 
@@ -34,8 +32,7 @@ puts
 puts "2. Using a scope directly (for immediate use):"
 puts <<~RUBY
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
-    scope: User.where(active: true).order(:created_at),
-    batch_size: 100
+    scope: User.where(active: true).order(:created_at)
   )
   
   # Iterate over records
@@ -79,21 +76,24 @@ puts <<~RUBY
   # Create source using the named scope
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
     model_class: User,
-    scope_name: :recently_active,
-    batch_size: 100
+    scope_name: :recently_active
   )
   
   # Define sink
   sink = ActiveDataFlow::Connector::Sink::ActiveRecordSink.new(
     model_class: UserBackup,
-    batch_size: 100
+    batch_size: 100  # Sink can use batch_size for batch inserts
   )
   
-  # Create data flow (will be persisted and can be reloaded)
+  # Create data flow with runtime configuration
+  # batch_size is configured on the runtime, not the source
   ActiveDataFlow::DataFlow.create!(
     name: "active_users_backup",
     source: source,
-    sink: sink
+    sink: sink,
+    runtime_config: {
+      batch_size: 100  # Runtime controls how many records to process at once
+    }
   )
 RUBY
 
@@ -104,11 +104,10 @@ puts <<~RUBY
     scope: User.where(active: true)
                .where("last_login_at > ?", 30.days.ago)
                .includes(:profile)
-               .order(:created_at),
-    batch_size: 100
+               .order(:created_at)
   )
   
-  # Use immediately
+  # Use immediately (runtime will control batch_size)
   source.each do |user|
     # Process user
   end
