@@ -45,25 +45,4 @@ namespace :active_data_flow do
     deleted_count = ActiveDataFlow::SchedulerService.new.cleanup_old_runs
     puts "Deleted #{deleted_count} old runs"
   end
-
-  desc "Register all data flows"
-  task register: :environment do
-    puts "Registering data flows..."
-    
-    # This would typically be done automatically when flows are loaded
-    # but this task can be used to manually register flows
-    Rails.application.eager_load!
-    
-    # Find all classes that include ActiveRecord2ActiveRecord
-    flow_classes = ObjectSpace.each_object(Class).select do |klass|
-      klass < Object && klass.included_modules.include?(ActiveDataFlow::ActiveRecord2ActiveRecord)
-    end
-    
-    flow_classes.each do |flow_class|
-      puts "Registering #{flow_class.name}..."
-      flow_class.new # This triggers registration
-    end
-    
-    puts "Registration complete"
-  end
 end

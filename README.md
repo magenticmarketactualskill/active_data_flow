@@ -97,24 +97,6 @@ rails generate active_data_flow:data_flow user_sync
 
 This creates `app/data_flows/user_sync_flow.rb` where you can define your data flow.
 
-### Using the ActiveRecord2ActiveRecord Concern
-
-For ActiveRecord-to-ActiveRecord data flows, you can use the provided concern for a cleaner DSL:
-
-```ruby
-class UserSyncFlow
-  include ActiveDataFlow::ActiveRecord2ActiveRecord
-
-  source User.where(active: true)
-  sink UserBackup
-  runtime :heartbeat, interval: 3600, batch_size: 100, enabled: true
-  
-  register name: "user_sync"
-end
-```
-
-The concern provides class methods for defining source, sink, and runtime, then registers the data flow automatically.
-
 ### Creating Data Flows
 
 Data flows are automatically registered when the application starts. Define a class with a `register` method:
