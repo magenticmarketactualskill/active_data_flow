@@ -21,17 +21,14 @@ puts <<~RUBY
     scope :created_after, ->(date) { where("created_at > ?", date) }
   end
   
-  # Create source using named scope
+  # Create source using the scope
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
-    model_class: User,
-    scope_name: :active  # Calls User.active
+    scope: User.active
   )
   
   # With parameters
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
-    model_class: User,
-    scope_name: :created_after,
-    scope_params: [1.week.ago]
+    scope: User.created_after(1.week.ago)
   )
 RUBY
 
@@ -66,10 +63,9 @@ puts <<~RUBY
     scope :recently_active, -> { where("last_login_at > ?", 30.days.ago) }
   end
   
-  # Create source using the named scope (required for persistence)
+  # Create source using the scope (named scopes are serializable)
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
-    model_class: User,
-    scope_name: :recently_active
+    scope: User.recently_active
   )
   
   # Define sink
@@ -104,7 +100,6 @@ puts <<~RUBY
   
   # Use the named scope
   source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
-    model_class: User,
-    scope_name: :recently_active_with_profile
+    scope: User.recently_active_with_profile
   )
 RUBY
