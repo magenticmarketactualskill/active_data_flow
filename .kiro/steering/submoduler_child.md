@@ -1,1 +1,1 @@
-../../vendor/submoduler_child/.kiro/steering/submoduler_child.md
+../../../../../../vendor/submoduler_child/.kiro/steering/submoduler_child.md

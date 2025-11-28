@@ -1,1 +1,0 @@
-Ignore files in the hide folder and everthing in it.
