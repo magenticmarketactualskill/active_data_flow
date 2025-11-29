@@ -1,0 +1,3 @@
+ActiveDataFlow::Connector::Sink::ActiveRecordSink.new(
+    model_class: <%= model_class %>
+)

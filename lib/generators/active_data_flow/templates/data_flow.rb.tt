@@ -1,31 +1,48 @@
 # frozen_string_literal: true
+require 'active_data_flow'
 
+# <%= class_name %>Flow demonstrates ActiveDataFlow functionality
+#
+# This DataFlow:
+# - Reads from a source
+# - Transforms data
+# - Writes to a sink
 class <%= class_name %>Flow
+
   def self.register
-    source = ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
-      model_class: SourceModel,
-      scope_name: :active
-    )
+    @source = <%= render_template('source.rb') %>
 
-    sink = ActiveDataFlow::Connector::Sink::ActiveRecordSink.new(
-      model_class: DestinationModel,
-      batch_size: 100
-    )
-
-    runtime = ActiveDataFlow::Runtime::Base.new(
-      interval: 3600,
-      batch_size: 100,  # Source iteration batch size
-      enabled: true     # Whether the data flow is enabled
-    )
+    @sink = <%= render_template('sink.rb') %>
+    
+    @runtime = <%= render_template('runtime.rb') %>
 
     ActiveDataFlow::DataFlow.find_or_create(
-      name: "<%= file_name %>",
+      name: "<%= file_name %>_flow",
       source: source,
       sink: sink,
       runtime: runtime
     )
   end
-end
 
-# Note: The .register method is automatically called by config/initializers/data_flows.rb
-# after ActiveRecord is available. You don't need to call it manually.
+  def run
+    count = 0
+    @source.each do |message|
+      transformed = transform(message)
+      @sink.write(transformed)
+      count += 1
+      break if count >= @source.batch_size
+    end
+  rescue StandardError => e
+    Rails.logger.error("<%= class_name %>Flow error: #{e.message}")
+    Rails.logger.error(e.backtrace.join("\n"))
+    raise
+  end
+
+  private
+
+  # Transforms data for processing
+  def transform(data)
+    # TODO: Implement your transformation logic here
+    data
+  end
+end

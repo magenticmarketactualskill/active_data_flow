@@ -1,0 +1,5 @@
+ActiveDataFlow::Connector::Source::ActiveRecordSource.new(
+    scope: <%= scope %>,
+    scope_params: <%= scope_params %>,
+    batch_size: <%= batch_size %>
+)

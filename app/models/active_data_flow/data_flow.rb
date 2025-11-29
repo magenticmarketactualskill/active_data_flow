@@ -2,6 +2,7 @@
 
 module ActiveDataFlow
   class DataFlow < ApplicationRecord
+    
     # Associations
     has_many :data_flow_runs, dependent: :destroy
     
@@ -25,7 +26,7 @@ module ActiveDataFlow
         .where(data_flow_runs: { status: 'pending', run_after: ..Time.current })
         .distinct
     }
-    
+
     # Tell Rails how to generate routes for this model
     def self.model_name
       @_model_name ||= ActiveModel::Name.new(self, ActiveDataFlow, "data_flow")
@@ -48,12 +49,30 @@ module ActiveDataFlow
     def enabled?
       runtime&.dig('enabled') == true
     end
-    
+
+    def run_one(message)
+        transformed = transform(message)
+        @sink.write(transformed)
+        @count += 1
+    end
+
+    def run_batch
+      @count = 0
+      @source.each do |message|
+        run_one(message)
+        break if @count >= @source.batch_size
+      end
+    rescue StandardError => e
+      Rails.logger.error("<%= class_name %>Flow error: #{e.message}")
+      Rails.logger.error(e.backtrace.join("\n"))
+      raise
+    end
+
     # Get the next pending run that's due
     def next_due_run
       data_flow_runs.pending.where(run_after: ..Time.current).order(:run_after).first
     end
-    
+     
     # Schedule the next run based on interval
     def schedule_next_run(from_time = Time.current)
       return unless enabled?
