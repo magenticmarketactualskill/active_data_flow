@@ -12,102 +12,75 @@ module ActiveDataFlow
       setup :prepare_destination
 
       test "generator creates data flow file with default options" do
-        run_generator ["product_sync"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
-          assert_match(/class ProductSyncFlow/, content)
-          assert_match(/require 'active_data_flow'/, content)
-          assert_match(/def self\.register/, content)
-          assert_match(/def transform\(data\)/, content)
-          assert_match(/name: "product_sync_flow"/, content)
+        assert_generated_flow("product_sync") do |content|
+          assert_includes_structure(content, "ProductSyncFlow", "product_sync_flow")
+          assert_match(/model_class: ProductSync/, content)
         end
       end
 
       test "generator uses custom scope option" do
-        run_generator ["product_sync", "--scope=Product.active"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
+        assert_generated_flow("product_sync", "--scope=Product.active") do |content|
           assert_match(/scope: Product\.active/, content)
         end
       end
 
       test "generator uses custom batch_size option" do
-        run_generator ["product_sync", "--batch-size=50"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
+        assert_generated_flow("product_sync", "--batch-size=50") do |content|
           assert_match(/batch_size: 50/, content)
         end
       end
 
       test "generator uses custom model_class option" do
-        run_generator ["product_sync", "--model-class=ProductExport"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
+        assert_generated_flow("product_sync", "--model-class=ProductExport") do |content|
           assert_match(/model_class: ProductExport/, content)
         end
       end
 
-      test "generator uses class name as default model_class" do
-        run_generator ["product_sync"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
-          assert_match(/model_class: ProductSync/, content)
-        end
-      end
-
-      test "generator includes source template" do
-        run_generator ["product_sync"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
-          assert_match(/ActiveDataFlow::Connector::Source::ActiveRecordSource\.new/, content)
-          assert_match(/scope:/, content)
-          assert_match(/scope_params:/, content)
-          assert_match(/batch_size:/, content)
-        end
-      end
-
-      test "generator includes sink template" do
-        run_generator ["product_sync"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
-          assert_match(/ActiveDataFlow::Connector::Sink::ActiveRecordSink\.new/, content)
-          assert_match(/model_class:/, content)
-        end
-      end
-
-      test "generator includes runtime template" do
-        run_generator ["product_sync"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
-          assert_match(/ActiveDataFlow::Runtime::Heartbeat\.new/, content)
+      test "generator includes all templates" do
+        assert_generated_flow("product_sync") do |content|
+          assert_includes_templates(content)
         end
       end
 
       test "generator handles scope_params array option" do
-        run_generator ["product_sync", "--scope-params=active", "published"]
-
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
+        assert_generated_flow("product_sync", "--scope-params=active", "published") do |content|
           assert_match(/scope_params: \["active", "published"\]/, content)
         end
       end
 
       test "generator creates file with correct naming convention" do
-        run_generator ["user_export"]
-
-        assert_file "app/data_flows/user_export_flow.rb" do |content|
-          assert_match(/class UserExportFlow/, content)
-          assert_match(/name: "user_export_flow"/, content)
+        assert_generated_flow("user_export") do |content|
+          assert_includes_structure(content, "UserExportFlow", "user_export_flow")
         end
       end
 
-      test "generator includes transform method stub" do
-        run_generator ["product_sync"]
+      private
 
-        assert_file "app/data_flows/product_sync_flow.rb" do |content|
-          assert_match(/private/, content)
-          assert_match(/def transform\(data\)/, content)
-          assert_match(/# TODO: Implement your transformation logic here/, content)
+      def assert_generated_flow(name, *args)
+        run_generator [name, *args]
+        assert_file "app/data_flows/#{name}_flow.rb" do |content|
+          yield content if block_given?
         end
+      end
+
+      def assert_includes_structure(content, class_name, flow_name)
+        [
+          /class #{class_name}/,
+          /require 'active_data_flow'/,
+          /def self\.register/,
+          /def transform\(data\)/,
+          /name: "#{flow_name}"/,
+          /private/,
+          /# TODO: Implement your transformation logic here/
+        ].each { |pattern| assert_match(pattern, content) }
+      end
+
+      def assert_includes_templates(content)
+        {
+          source: [/ActiveDataFlow::Connector::Source::ActiveRecordSource\.new/, /scope:/, /scope_params:/, /batch_size:/],
+          sink: [/ActiveDataFlow::Connector::Sink::ActiveRecordSink\.new/, /model_class:/],
+          runtime: [/ActiveDataFlow::Runtime::Heartbeat\.new/]
+        }.each_value { |patterns| patterns.each { |pattern| assert_match(pattern, content) } }
       end
     end
   end
