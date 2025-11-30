@@ -52,7 +52,20 @@ module ActiveDataFlow
 
     def run_one(message)
         transformed = transform(message)
-        #log collision if transform_collision
+        
+        # Check for collision if transform_collision method exists
+        if respond_to?(:transform_collision, true)
+          Rails.logger.info("[DataFlow] Collision detection called for message: #{message['id']}")
+          collision = transform_collision(message, transformed)
+          if collision
+            Rails.logger.warn("[DataFlow] Collision detected: #{collision}")
+          else
+            Rails.logger.info("[DataFlow] No collision detected")
+          end
+        else
+          Rails.logger.debug("[DataFlow] Collision detection not implemented for this flow")
+        end
+        
         @sink.write(transformed)
         @count += 1
     end
