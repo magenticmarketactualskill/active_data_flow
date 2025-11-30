@@ -51,35 +51,24 @@ module ActiveDataFlow
     end
 
     def run_one(message)
-        transformed = transform(message)
-        
-        # Check for collision if transform_collision method exists
-        if respond_to?(:transform_collision, true)
-          Rails.logger.info("[DataFlow] Collision detection called for message: #{message['id']}")
-          collision = transform_collision(message, transformed)
-          if collision
-            Rails.logger.warn("[DataFlow] Collision detected: #{collision}")
-          else
-            Rails.logger.info("[DataFlow] No collision detected")
-          end
-        else
-          Rails.logger.debug("[DataFlow] Collision detection not implemented for this flow")
-        end
-        
-        @sink.write(transformed)
-        @count += 1
+      transformed = transform(message)
+      
+      # Check for collisions (subclasses can override transform_collision)
+      collision = transform_collision(transformed: transformed)
+      Rails.logger.warn("[DataFlow] Collision detected: #{collision.inspect}") if collision
+      
+      @sink.write(transformed)
+      @count += 1
     end
 
     def run_batch
       @count = 0
       first_id = nil
       last_id = nil
-      # Default message_id_calc if not provided
-      message_id_calc = lambda { |message| message['id'] }
       
       @source.each do |message|
         # Track cursors
-        current_id = message_id_calc.call(message)
+        current_id = message_id(message)
         first_id ||= current_id
         last_id = current_id
         
@@ -92,7 +81,7 @@ module ActiveDataFlow
         current_run.update(first_id: first_id, last_id: last_id) if first_id && last_id
       end
     rescue StandardError => e
-      Rails.logger.error("<%= class_name %>Flow error: #{e.message}")
+      Rails.logger.error("DataFlow error: #{e.message}")
       Rails.logger.error(e.backtrace.join("\n"))
       raise
     end
@@ -207,5 +196,17 @@ module ActiveDataFlow
         data_flow_runs.pending.update_all(status: 'cancelled')
       end
     end
+
+    # Override in subclasses to customize message ID extraction
+    def message_id(message)
+      message['id']
+    end
+
+    # Override in subclasses to implement collision detection
+    def transform_collision(message, transformed)
+      Rails.logger.debug("[DataFlow] Collision detection not implemented for this flow")
+      nil
+    end
+
   end
 end
