@@ -34,7 +34,7 @@ module ActiveDataFlow
         
         # Serialize to JSON
         def as_json(*_args)
-          @options
+          @options.merge('class_name' => self.class.name)
         end
         
         # Deserialize from JSON

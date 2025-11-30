@@ -112,7 +112,48 @@ module ActiveDataFlow
       update(last_error: error.to_s)
     end
     
+    def run
+      # Cast to flow_class if needed to ensure we have the correct methods (like transform)
+      flow_instance = if self.class == ActiveDataFlow::DataFlow && flow_class != ActiveDataFlow::DataFlow
+                        becomes(flow_class)
+                      else
+                        self
+                      end
+      
+      flow_instance.send(:prepare_run)
+      flow_instance.run_batch
+    end
+
+    def heartbeat_event
+      schedule_next_run
+    end
+
+    def flow_class
+      name.camelize.constantize
+    end
+
     private
+    
+    def prepare_run
+      @source = rehydrate_connector(source)
+      @sink = rehydrate_connector(sink)
+    end
+
+    def rehydrate_connector(data)
+      return nil unless data
+      
+      klass_name = data['class_name']
+      unless klass_name
+        Rails.logger.warn "[ActiveDataFlow] Connector class name missing in data: #{data.inspect}"
+        return nil
+      end
+      
+      klass = klass_name.constantize
+      klass.from_json(data)
+    rescue NameError => e
+      Rails.logger.error "[ActiveDataFlow] Failed to load connector class: #{e.message}"
+      nil
+    end
     
     def schedule_initial_run
       return unless enabled?
