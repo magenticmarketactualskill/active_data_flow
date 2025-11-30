@@ -52,15 +52,31 @@ module ActiveDataFlow
 
     def run_one(message)
         transformed = transform(message)
+        #log collision if transform_collision
         @sink.write(transformed)
         @count += 1
     end
 
     def run_batch
       @count = 0
+      first_id = nil
+      last_id = nil
+      # Default message_id_calc if not provided
+      message_id_calc = lambda { |message| message['id'] }
+      
       @source.each do |message|
+        # Track cursors
+        current_id = message_id_calc.call(message)
+        first_id ||= current_id
+        last_id = current_id
+        
         run_one(message)
         break if @count >= @source.batch_size
+      end
+      
+      # Update the current run with cursor information
+      if current_run = data_flow_runs.in_progress.first
+        current_run.update(first_id: first_id, last_id: last_id) if first_id && last_id
       end
     rescue StandardError => e
       Rails.logger.error("<%= class_name %>Flow error: #{e.message}")
