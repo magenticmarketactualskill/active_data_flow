@@ -21,9 +21,26 @@ module ActiveDataFlow
             result_enum = @collision_detector.predicted_write_result(transformed: transformed)
             result_string = @collision_detector.predicted_write_result_string(result_enum)
             Rails.logger.info("[DataFlow.sink] predicted_write_result: #{result_string}")
+            
+            # Act on collision detection results
+            case result_enum
+            when ActiveDataFlow::Connector::Sink::Collision::REDUNDENT_TRANSFORMED_RECORD
+              # Skip writing - record already exists with same data
+              Rails.logger.debug("[DataFlow.sink] Skipping redundant record")
+              return
+            when ActiveDataFlow::Connector::Sink::Collision::UPDATED_TRANSFORMED_RECORD
+              # Update existing record
+              existing_id = @collision_detector.get_transformed_id(transformed)
+              existing = @model_class.find_by(product_id: existing_id)
+              if existing
+                existing.update!(transformed)
+                Rails.logger.info("[DataFlow.sink] Updated existing record: #{existing_id}")
+              end
+              return
+            end
           end
           
-          # Create or update the record
+          # Create new record (NEW_TRANSFORMED_RECORD or NO_PREDICTION)
           record = @model_class.new(transformed)
           record.save!
         end
