@@ -25,3 +25,4 @@ gem 'rainbow', '~> 3.0'
 gem 'octokit', '~> 4.0'
 gem 'inifile', '~> 3.0'
 
+gem 'redis-emulator', path: './vendor/redis-emulator'
