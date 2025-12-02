@@ -56,6 +56,13 @@ The install generator creates `config/initializers/active_data_flow.rb` where yo
 
 ```ruby
 ActiveDataFlow.configure do |config|
+  # Storage backend (default: :active_record)
+  # Options: :active_record, :redcord_redis, :redcord_redis_emulator
+  config.storage_backend = :active_record
+
+  # For Redcord backends, configure Redis connection
+  # config.redis_config = { url: ENV['REDIS_URL'] }
+
   # Enable/disable automatic loading of data flows
   config.auto_load_data_flows = true
 
@@ -66,6 +73,16 @@ ActiveDataFlow.configure do |config|
   config.data_flows_path = "app/data_flows"
 end
 ```
+
+### Storage Backends
+
+ActiveDataFlow supports multiple storage backends:
+
+- **ActiveRecord** (default): Uses your Rails database
+- **Redcord Redis**: Uses Redis via Redcord gem (requires `gem 'redcord', '~> 0.2.2'`)
+- **Redcord Redis Emulator**: Uses Rails cache (no separate Redis needed)
+
+See `docs/storage_backends.md` for detailed configuration and performance comparisons.
 
 **Important:** Data flows are automatically loaded and registered by the engine AFTER Rails initialization completes and ActiveRecord is available. This ensures all dependencies (models, gems, etc.) are loaded before data flows are registered.
 

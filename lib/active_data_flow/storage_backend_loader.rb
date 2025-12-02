@@ -27,12 +27,14 @@ module ActiveDataFlow
         case config.storage_backend
         when :active_record
           # ActiveRecord models are in app/models/active_data_flow/active_record/
-          engine.config.autoload_paths << engine.root.join("app/models/active_data_flow/active_record")
-          engine.config.eager_load_paths << engine.root.join("app/models/active_data_flow/active_record")
+          path = engine.root.join("app/models/active_data_flow/active_record")
+          engine.config.autoload_paths += [path] unless engine.config.autoload_paths.include?(path)
+          engine.config.eager_load_paths += [path] unless engine.config.eager_load_paths.include?(path)
         when :redcord_redis, :redcord_redis_emulator
           # Redcord models are in app/models/active_data_flow/redcord/
-          engine.config.autoload_paths << engine.root.join("app/models/active_data_flow/redcord")
-          engine.config.eager_load_paths << engine.root.join("app/models/active_data_flow/redcord")
+          path = engine.root.join("app/models/active_data_flow/redcord")
+          engine.config.autoload_paths += [path] unless engine.config.autoload_paths.include?(path)
+          engine.config.eager_load_paths += [path] unless engine.config.eager_load_paths.include?(path)
         end
       end
 
@@ -86,6 +88,19 @@ module ActiveDataFlow
         # No connectivity check needed - uses Rails.cache
       end
 
+      def log_configuration
+        config = ActiveDataFlow.configuration
+        logger = defined?(Rails) ? Rails.logger : Logger.new($stdout)
+
+        logger.info "[ActiveDataFlow] Storage backend: #{config.storage_backend}"
+
+        if config.redcord_redis?
+          logger.info "[ActiveDataFlow] Redis config: #{config.redis_config.inspect}"
+        elsif config.redcord_redis_emulator?
+          logger.info "[ActiveDataFlow] Using Redis Emulator with Rails.cache"
+        end
+      end
+
       private
 
       def load_active_record_backend
@@ -119,19 +134,6 @@ module ActiveDataFlow
         raise ActiveDataFlow::DependencyError,
               "The 'redis-emulator' gem is required for :redcord_redis_emulator backend. " \
               "Add 'gem \"redis-emulator\"' to your Gemfile and run 'bundle install'."
-      end
-
-      def log_configuration
-        config = ActiveDataFlow.configuration
-        logger = defined?(Rails) ? Rails.logger : Logger.new($stdout)
-
-        logger.info "[ActiveDataFlow] Storage backend: #{config.storage_backend}"
-
-        if config.redcord_redis?
-          logger.info "[ActiveDataFlow] Redis config: #{config.redis_config.inspect}"
-        elsif config.redcord_redis_emulator?
-          logger.info "[ActiveDataFlow] Using Redis Emulator with Rails.cache"
-        end
       end
     end
   end

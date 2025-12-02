@@ -12,7 +12,7 @@ ActiveDataFlow.configure do |config|
 
   # === Redcord Redis Backend ===
   # Uses a standard Redis server for storage
-  # Requires: gem 'redis' and gem 'redcord'
+  # Requires: gem 'redcord', '~> 0.2.2' (includes redis and sorbet-runtime)
   # config.storage_backend = :redcord_redis
   # config.redis_config = {
   #   url: ENV['REDIS_URL'] || 'redis://localhost:6379/0'
@@ -24,7 +24,7 @@ ActiveDataFlow.configure do |config|
 
   # === Redcord Redis Emulator Backend ===
   # Uses redis-emulator backed by Rails Solid Cache (no separate Redis server needed)
-  # Requires: gem 'redis-emulator' and gem 'redcord'
+  # Requires: gem 'redis-emulator' and gem 'redcord', '~> 0.2.2'
   # config.storage_backend = :redcord_redis_emulator
   # Note: Uses Rails.cache as backing store (configure in config/cache.yml)
 

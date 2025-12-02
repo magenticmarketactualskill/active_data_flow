@@ -4,16 +4,18 @@
 # This file maintains compatibility with existing code that references ActiveDataFlow::DataFlow
 
 module ActiveDataFlow
-  # Dynamically load the appropriate backend model based on configuration
-  def self.DataFlow
-    case configuration.storage_backend
-    when :active_record
-      ActiveDataFlow::ActiveRecord::DataFlow
-    when :redcord_redis, :redcord_redis_emulator
-      ActiveDataFlow::Redcord::DataFlow
-    else
-      # Default to ActiveRecord
-      ActiveDataFlow::ActiveRecord::DataFlow
-    end
+  # Dynamically set the DataFlow constant based on configuration
+  # This runs when the file is loaded
+  case ActiveDataFlow.configuration.storage_backend
+  when :active_record
+    require_relative 'active_record/data_flow'
+    DataFlow = ActiveDataFlow::ActiveRecord::DataFlow
+  when :redcord_redis, :redcord_redis_emulator
+    require_relative 'redcord/data_flow'
+    DataFlow = ActiveDataFlow::Redcord::DataFlow
+  else
+    # Default to ActiveRecord
+    require_relative 'active_record/data_flow'
+    DataFlow = ActiveDataFlow::ActiveRecord::DataFlow
   end
 end

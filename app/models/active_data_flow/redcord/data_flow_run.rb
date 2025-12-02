@@ -1,30 +1,24 @@
 # frozen_string_literal: true
+# typed: false
+
+require 'sorbet-runtime'
 
 module ActiveDataFlow
   module Redcord
-    class DataFlowRun
+    class DataFlowRun < T::Struct
       include ::Redcord::Base
 
-      # Schema definition
-      attribute :data_flow_id, :string
-      attribute :status, :string
-      attribute :run_after, :integer    # Unix timestamp
-      attribute :started_at, :integer
-      attribute :ended_at, :integer
-      attribute :error_message, :string
-      attribute :first_id, :string
-      attribute :last_id, :string
-      attribute :created_at, :integer
-      attribute :updated_at, :integer
-
-      # Indexes
-      range_index :data_flow_id
-      range_index :status
-      range_index :run_after
-
-      # Validations
-      validates :status, inclusion: { in: %w[pending in_progress success failed cancelled] }
-      validates :run_after, presence: true
+      # Schema definition using Redcord's attribute method
+      # Note: index: true automatically creates appropriate index type based on data type
+      # Type safety is enforced by Sorbet at runtime
+      attribute :data_flow_id, String, index: true
+      attribute :status, String, index: true
+      attribute :run_after, Integer, index: true    # Unix timestamp (range index)
+      attribute :started_at, T.nilable(Integer)
+      attribute :ended_at, T.nilable(Integer)
+      attribute :error_message, T.nilable(String)
+      attribute :first_id, T.nilable(String)
+      attribute :last_id, T.nilable(String)
 
       # Tell Rails how to generate routes for this model
       def self.model_name

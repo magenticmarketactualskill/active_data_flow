@@ -26,3 +26,4 @@ gem 'octokit', '~> 4.0'
 gem 'inifile', '~> 3.0'
 
 gem 'redis-emulator', path: './vendor/redis-emulator'
+gem 'redcord', '~> 0.2.2'

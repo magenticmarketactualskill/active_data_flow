@@ -36,13 +36,14 @@ rails db:migrate
 
 ### 2. Redcord with Redis
 
-Uses a standard Redis server for storage via the Redcord gem.
+Uses a standard Redis server for storage via the Redcord gem (compatible with Redcord 0.2.2+).
 
 **Pros:**
 - Fast key-value storage
 - Better for high-frequency updates
 - Lower latency for simple operations
 - Scales horizontally
+- Type safety via Sorbet runtime
 
 **Cons:**
 - Requires separate Redis server
@@ -53,9 +54,10 @@ Uses a standard Redis server for storage via the Redcord gem.
 
 Add to Gemfile:
 ```ruby
-gem 'redis'
-gem 'redcord'
+gem 'redcord', '~> 0.2.2'
 ```
+
+Note: Redcord automatically includes `redis` and `sorbet-runtime` as dependencies.
 
 Configure:
 ```ruby
@@ -82,6 +84,7 @@ Uses redis-emulator backed by Rails Solid Cache. No separate Redis server needed
 - Same Redcord interface as standard Redis
 - Good for development and testing
 - Simpler deployment
+- Type safety via Sorbet runtime
 
 **Cons:**
 - Performance depends on Rails.cache backend
@@ -93,8 +96,10 @@ Uses redis-emulator backed by Rails Solid Cache. No separate Redis server needed
 Add to Gemfile:
 ```ruby
 gem 'redis-emulator'
-gem 'redcord'
+gem 'redcord', '~> 0.2.2'
 ```
+
+Note: Redcord automatically includes `sorbet-runtime` as a dependency.
 
 Configure:
 ```ruby
@@ -190,10 +195,17 @@ redis-server
 **Issue:** Gem not found
 ```bash
 # Solution: Add to Gemfile and bundle
-gem 'redis'
-gem 'redcord'
+gem 'redcord', '~> 0.2.2'
 bundle install
 ```
+
+**Issue:** Type errors with Sorbet
+```
+TypeError: Parameter 'klass': Expected type T.class_of(T::Struct)
+```
+- This indicates an incompatibility with the Redcord models
+- Ensure you're using ActiveDataFlow 0.1.11+ which includes Redcord 0.2.2 compatibility fixes
+- Models must inherit from `T::Struct` and use proper Sorbet type annotations
 
 ### Redcord Redis Emulator Backend
 
@@ -201,13 +213,17 @@ bundle install
 ```bash
 # Solution: Add to Gemfile and bundle
 gem 'redis-emulator'
-gem 'redcord'
+gem 'redcord', '~> 0.2.2'
 bundle install
 ```
 
 **Issue:** Cache not configured
 - Ensure Rails.cache is properly configured in config/cache.yml
 - For production, use Solid Cache
+
+**Issue:** Type errors with Sorbet
+- Same as Redcord Redis backend above
+- Ensure you're using ActiveDataFlow 0.1.11+ with Redcord compatibility fixes
 
 ## Example Configurations
 
