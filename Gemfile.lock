@@ -10,27 +10,27 @@ PATH
 PATH
   remote: submodules/active_data_flow-connector-sink-active_record
   specs:
-    active_data_flow-connector-sink-active_record (0.1.27)
+    active_data_flow-connector-sink-active_record (0.1.39)
       activerecord (>= 6.0)
       activesupport (>= 6.0)
 
 PATH
   remote: submodules/active_data_flow-connector-source-active_record
   specs:
-    active_data_flow-connector-source-active_record (0.1.27)
+    active_data_flow-connector-source-active_record (0.1.39)
       activerecord (>= 6.0)
       activesupport (>= 6.0)
 
 PATH
   remote: submodules/active_data_flow-runtime-heartbeat
   specs:
-    active_data_flow-runtime-heartbeat (0.1.27)
+    active_data_flow-runtime-heartbeat (0.1.39)
       rails (>= 6.0)
 
 PATH
   remote: submodules/active_data_flow-runtime-redcord
   specs:
-    active_data_flow-runtime-redcord (0.1.26)
+    active_data_flow-runtime-redcord (0.1.38)
       rails (>= 6.0)
 
 PATH
@@ -45,6 +45,12 @@ PATH
     git_steering (0.1.0)
       rainbow (~> 3.0)
       thor (~> 1.0)
+
+PATH
+  remote: vendor/rung
+  specs:
+    rung (0.1.0)
+      thor (~> 1.3)
 
 PATH
   remote: vendor/submoduler_parent
@@ -334,6 +340,7 @@ DEPENDENCIES
   rspec (~> 3.12)
   rspec-rails (~> 6.0)
   rubocop (~> 1.50)
+  rung!
   sqlite3 (>= 1.4)
   submoduler-submoduler_parent!
   vendorer!

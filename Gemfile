@@ -11,6 +11,7 @@ gem 'submoduler-submoduler_parent', path: 'vendor/submoduler_parent'
 gemspec
 
 gem 'git_steering', path: 'vendor/git_steering'
+gem 'rung', path: './vendor/rung'
 gem 'vendorer', path: 'vendor/vendorer'
 gem 'forker', path: 'vendor/forker' 
 

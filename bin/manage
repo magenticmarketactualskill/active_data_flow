@@ -1,0 +1,174 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'pathname'
+
+# Determine project root (one level up from bin/)
+PROJECT_ROOT = File.expand_path('..', __dir__)
+
+# Add vendor paths to load path
+$LOAD_PATH.unshift File.join(PROJECT_ROOT, 'vendor', 'vendorer', 'lib')
+
+ENV["BUNDLE_GEMFILE"] ||= File.join(PROJECT_ROOT, "Gemfile")
+
+require 'bundler/setup'
+require 'thor'
+
+# Try to load rainbow for colorized output
+begin
+  require 'rainbow'
+  COLORIZE = true
+rescue LoadError
+  COLORIZE = false
+end
+
+module Manage
+  class CLI < Thor
+    desc "update", "Update project: validate with rung, update submodules, update vendored gems"
+    method_option :message, type: :string, aliases: "-m", required: true, desc: "Commit message (required)"
+    def update
+      message = options[:message]
+      
+      log_header "Project Update Process"
+      
+      # Step 1: Validate with rung
+      unless run_rung_validate
+        log_error "Rung validation failed. Aborting update."
+        exit 1
+      end
+      
+      # Step 2: Update submodules
+      unless run_submoduler_update(message)
+        log_error "Submoduler update failed. Aborting update."
+        exit 1
+      end
+      
+      # Step 3: Check and update vendored gems
+      vendored_gems_with_changes = check_vendored_gem_changes
+      
+      if vendored_gems_with_changes.any?
+        log_info "Found #{vendored_gems_with_changes.size} vendored gem(s) with changes:"
+        vendored_gems_with_changes.each do |gem_name|
+          log_info "  - #{gem_name}"
+        end
+        
+        unless run_vendorer_update(message)
+          log_error "Vendorer update failed."
+          exit 1
+        end
+      else
+        log_info "No vendored gems have uncommitted changes. Skipping vendorer update."
+      end
+      
+      # Summary
+      log_header "Update Complete"
+      log_success "✓ Rung validation passed"
+      log_success "✓ Submodules updated"
+      if vendored_gems_with_changes.any?
+        log_success "✓ Vendored gems updated and pushed (#{vendored_gems_with_changes.size} gem(s))"
+      else
+        log_info "  No vendored gem changes"
+      end
+      
+      exit 0
+    end
+    
+    desc "version", "Display manage version"
+    def version
+      puts "manage version 0.1.0"
+    end
+    
+    # Handle Thor exit behavior
+    def self.exit_on_failure?
+      true
+    end
+    
+    private
+    
+    def run_rung_validate
+      log_step "Validating with rung..."
+      system("#{PROJECT_ROOT}/bin/rung", "validate")
+    end
+    
+    def run_submoduler_update(message)
+      log_step "Updating submodules..."
+      system("#{PROJECT_ROOT}/bin/submoduler", "update", "-m", message)
+    end
+    
+    def check_vendored_gem_changes
+      log_step "Checking vendored gem changes..."
+      
+      output = `#{PROJECT_ROOT}/bin/vendorer status 2>&1`
+      unless $?.success?
+        log_error "Failed to get vendorer status"
+        return []
+      end
+      
+      gems_with_changes = []
+      current_gem = nil
+      
+      output.each_line do |line|
+        line = line.strip
+        
+        # Parse gem name from "Gem: <name>" lines
+        if line.start_with?("Gem: ")
+          current_gem = line.sub("Gem: ", "")
+        end
+        
+        # Check if this gem has uncommitted changes
+        if line.include?("Has uncommitted changes") && current_gem
+          gems_with_changes << current_gem
+        end
+      end
+      
+      gems_with_changes
+    end
+    
+    def run_vendorer_update(message)
+      log_step "Updating vendored gems..."
+      system("#{PROJECT_ROOT}/bin/vendorer", "update", "-m", message)
+    end
+    
+    # Logging helpers
+    def log_header(msg)
+      puts ""
+      puts colorize("=" * 60, :cyan)
+      puts colorize(msg.center(60), :cyan, :bold)
+      puts colorize("=" * 60, :cyan)
+      puts ""
+    end
+    
+    def log_step(msg)
+      puts colorize("→ #{msg}", :blue, :bold)
+    end
+    
+    def log_info(msg)
+      puts colorize(msg, :white)
+    end
+    
+    def log_success(msg)
+      puts colorize(msg, :green)
+    end
+    
+    def log_error(msg)
+      puts colorize("✗ #{msg}", :red, :bold)
+    end
+    
+    def colorize(text, *colors)
+      return text unless COLORIZE
+      
+      result = Rainbow(text)
+      colors.each do |color|
+        case color
+        when :bold
+          result = result.bright
+        else
+          result = result.color(color)
+        end
+      end
+      result
+    end
+  end
+end
+
+Manage::CLI.start(ARGV)
