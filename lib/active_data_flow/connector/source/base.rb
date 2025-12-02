@@ -13,9 +13,10 @@ module ActiveDataFlow
         end
         
         # Iterate over records from the source
+        # @param batch_size [Integer] Number of records to process per batch
         # @param start_id [Integer, nil] Optional cursor ID to start from
         # @yield [Hash] each record as a hash
-        def each(start_id: nil, &block)
+        def each(batch_size: 100, start_id: nil, &block)
           raise NotImplementedError, "Subclasses must implement #each"
         end
         

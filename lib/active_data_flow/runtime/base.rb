@@ -5,12 +5,13 @@ module ActiveDataFlow
     class Base
       # Base class for all runtime implementations
       
-      attr_reader :options, :batch_size, :enabled
+      attr_reader :options, :batch_size, :enabled, :interval
       
-      def initialize(batch_size: 100, enabled: true, **options)
+      def initialize(batch_size: 100, enabled: true, interval: 3600, **options)
         @batch_size = batch_size
         @enabled = enabled
-        @options = options.merge(batch_size: batch_size, enabled: enabled)
+        @interval = interval
+        @options = options.merge(batch_size: batch_size, enabled: enabled, interval: interval)
       end
       
       # Execute a data flow

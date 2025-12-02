@@ -61,8 +61,8 @@ module ActiveDataFlow
       first_id = nil
       last_id = nil
       
-      # Pass cursor to source for incremental processing
-      @source.each(start_id: next_source_id) do |message|
+      # Pass batch_size and cursor to source for incremental processing
+      @source.each(batch_size: @runtime.batch_size, start_id: next_source_id) do |message|
         # Track cursors
         current_id = message_id(message)
         first_id ||= current_id
