@@ -27,9 +27,6 @@
 [submodule "submodules/active_data_flow-connector-source-json_rpc"]
 	path = submodules/active_data_flow-connector-source-json_rpc
 	url = https://github.com/magenticmarketactualskill/active_data_flow-connector-source-json_rpc
-[submodule "submodules/active_data_flow-examples-heartbeat_ar2ar"]
-	path = submodules/active_data_flow-examples-heartbeat_ar2ar
-	url = https://github.com/magenticmarketactualskill/active_data_flow-examples-heartbeat_ar2ar
 [submodule "submodules/active_data_flow-runtime-heartbeat_app"]
 	path = submodules/active_data_flow-runtime-heartbeat_app
 	url = https://github.com/magenticmarketactualskill/active_data_flow-runtime-heartbeat_app
