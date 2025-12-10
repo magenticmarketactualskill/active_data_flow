@@ -27,7 +27,7 @@ gem 'active_data_flow-runtime-redcord', path: 'submodules/active_data_flow-runti
 # gem 'active_data_flow-connector-sink-json_rpc', path: 'submodules/active_data_flow-connector-sink-json_rpc'
 # gem 'active_data_flow-connector-source-json_rpc', path: 'submodules/active_data_flow-connector-source-json_rpc'
 # gem 'active_data_flow-runtime-heartbeat_app', path: 'submodules/active_data_flow-runtime-heartbeat_app'
-# gem 'active_data_flow-core-core', path: 'submodules/active_data_flow-core-core'
+
 
 gem 'rainbow', '~> 3.0'
 gem 'octokit', '~> 4.0'

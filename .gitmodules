@@ -33,9 +33,6 @@
 [submodule "submodules/active_data_flow-runtime-heartbeat_app"]
 	path = submodules/active_data_flow-runtime-heartbeat_app
 	url = https://github.com/magenticmarketactualskill/active_data_flow-runtime-heartbeat_app
-[submodule "submodules/active_data_flow-core-core"]
-	path = submodules/active_data_flow-core-core
-	url = https://github.com/magenticmarketactualskill/active_data_flow-core-core
 [submodule "submodules/examples/rails8-demo"]
 	path = submodules/examples/rails8-demo
 	url = https://github.com/magenticmarketactualskill/active_data_flow-examples-rails8-demo
