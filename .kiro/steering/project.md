@@ -1,1 +1,1 @@
-/Users/ericlaquer/.rbenv/versions/3.4.5/lib/ruby/gems/3.4.0/bundler/gems/rung-a2617babd5d3/.kiro/steering/rung/project.md
+/Users/ericlaquer/Documents/GitHub/active_data_flow/vendor/rung/.kiro/steering/rung/project.md
