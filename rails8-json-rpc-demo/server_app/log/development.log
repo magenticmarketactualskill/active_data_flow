@@ -1,1 +1,38 @@
 [ActiveDataFlow] Storage backend: active_record
+[ActiveDataFlow] Storage backend: active_record
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='ServerApp'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='ServerApp'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='ServerApp'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2025-12-11 01:06:50.164533', '2025-12-11 01:06:50.164534') RETURNING "key" /*application='ServerApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ServerApp'*/[0m
+Migrating to CreateReceivedRecords (20251211004110)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ServerApp'*/[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "received_records" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "record_type" varchar NOT NULL, "source_id" integer NOT NULL, "data" json NOT NULL, "received_at" datetime(6), "processed_at" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='ServerApp'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_received_records_on_record_type" ON "received_records" ("record_type") /*application='ServerApp'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_received_records_on_received_at" ON "received_records" ("received_at") /*application='ServerApp'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE INDEX "index_received_records_on_record_type_and_source_id" ON "received_records" ("record_type", "source_id") /*application='ServerApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20251211004110') RETURNING "version" /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ServerApp'*/[0m
+[ActiveDataFlow] Storage backend: active_record
+[ActiveDataFlow] Storage backend: active_record
+[ActiveDataFlow] Storage backend: active_record
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Create (0.9ms)[0m  [1m[32mINSERT INTO "received_records" ("record_type", "source_id", "data", "received_at", "processed_at", "created_at", "updated_at") VALUES ('user', 1, '{"id":1,"name":"John Doe","email":"john@example.com","age":30,"created_at":"2024-12-11T10:00:00Z"}', '2025-12-10 23:10:00.554122', '2025-12-11 00:10:00.554207', '2025-12-11 01:10:00.559811', '2025-12-11 01:10:00.559811') RETURNING "id" /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Create (0.6ms)[0m  [1m[32mINSERT INTO "received_records" ("record_type", "source_id", "data", "received_at", "processed_at", "created_at", "updated_at") VALUES ('user', 2, '{"id":2,"name":"Jane Smith","email":"jane@example.com","age":25,"created_at":"2024-12-11T10:15:00Z"}', '2025-12-11 00:10:00.554216', '2025-12-11 00:40:00.554223', '2025-12-11 01:10:00.562937', '2025-12-11 01:10:00.562937') RETURNING "id" /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Create (0.7ms)[0m  [1m[32mINSERT INTO "received_records" ("record_type", "source_id", "data", "received_at", "processed_at", "created_at", "updated_at") VALUES ('order', 101, '{"id":101,"user_id":1,"user_name":"John Doe","user_email":"john@example.com","product_name":"Widget A","quantity":2,"price_cents":1999,"price_dollars":19.99,"total_cents":3998,"total_dollars":39.98,"created_at":"2024-12-11T11:00:00Z"}', '2025-12-11 00:25:00.554230', NULL, '2025-12-11 01:10:00.564699', '2025-12-11 01:10:00.564699') RETURNING "id" /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Create (0.6ms)[0m  [1m[32mINSERT INTO "received_records" ("record_type", "source_id", "data", "received_at", "processed_at", "created_at", "updated_at") VALUES ('order', 102, '{"id":102,"user_id":2,"user_name":"Jane Smith","user_email":"jane@example.com","product_name":"Widget B","quantity":1,"price_cents":2999,"price_dollars":29.99,"total_cents":2999,"total_dollars":29.99,"created_at":"2024-12-11T11:30:00Z"}', '2025-12-11 00:55:00.554236', NULL, '2025-12-11 01:10:00.566539', '2025-12-11 01:10:00.566539') RETURNING "id" /*application='ServerApp'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "received_records" /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "received_records" WHERE "received_records"."record_type" = 'user' /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "received_records" WHERE "received_records"."record_type" = 'order' /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "received_records" WHERE "received_records"."processed_at" IS NOT NULL /*application='ServerApp'*/[0m
+  [1m[36mReceivedRecord Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "received_records" WHERE "received_records"."processed_at" IS NULL /*application='ServerApp'*/[0m
+[ActiveDataFlow] Storage backend: active_record

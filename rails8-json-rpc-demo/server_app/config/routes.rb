@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "received_records/index"
+  get "received_records/show"
+  get "dashboard/index"
   # Mount ActiveDataFlow engine for DataFlow management
   mount ActiveDataFlow::Engine => "/active_data_flow"
 

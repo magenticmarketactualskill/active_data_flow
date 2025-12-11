@@ -9,6 +9,6 @@ class CreateOrders < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :orders, :user_id
+    # Note: Rails automatically creates an index for foreign keys
   end
 end

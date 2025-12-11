@@ -1,0 +1,2 @@
+module ReceivedRecordsHelper
+end
