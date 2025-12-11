@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require_relative '../base_data_flow'
+
 module ActiveDataFlow
   module ActiveRecord
     class DataFlow < ::ActiveRecord::Base
+      include ActiveDataFlow::BaseDataFlow
+      
       self.table_name = "active_data_flow_data_flows"
       
       # Associations
@@ -44,51 +48,7 @@ module ActiveDataFlow
         flow
       end
       
-      def interval_seconds
-        runtime&.dig('interval') || 3600
-      end
-      
-      def enabled?
-        runtime&.dig('enabled') == true
-      end
 
-      def run_one(message)
-        transformed = @runtime.transform(message)
-        @sink.write(transformed)
-        @count += 1
-      end
-
-      def run_batch
-        @count = 0
-        first_id = nil
-        last_id = nil
-        
-        # Pass batch_size and cursor to source for incremental processing
-        @source.each(batch_size: @runtime.batch_size, start_id: next_source_id) do |message|
-          # Track cursors
-          current_id = message_id(message)
-          first_id ||= current_id
-          last_id = current_id
-          
-          run_one(message)
-          break if @count >= @runtime.batch_size
-        end
-        
-        # Update cursor on DataFlow to track progress
-        if last_id
-          update(next_source_id: last_id)
-          Rails.logger.info("[DataFlow] Advanced cursor to #{last_id}")
-          
-          # Also update the run record for tracking
-          if current_run = data_flow_runs.in_progress.first
-            current_run.update(first_id: first_id, last_id: last_id)
-          end
-        end
-      rescue StandardError => e
-        Rails.logger.error("DataFlow error: #{e.message}")
-        Rails.logger.error(e.backtrace.join("\n"))
-        raise
-      end
 
       # Get the next pending run that's due
       def next_due_run
@@ -134,64 +94,42 @@ module ActiveDataFlow
         update(last_error: error.to_s)
       end
       
-      def run
-        # Cast to flow_class if needed to ensure we have the correct runtime
-        flow_instance = if self.class == ActiveDataFlow::ActiveRecord::DataFlow && flow_class != ActiveDataFlow::ActiveRecord::DataFlow
-                          becomes(flow_class)
-                        else
-                          self
-                        end
-        
-        flow_instance.send(:prepare_run)
-        flow_instance.run_batch
+      # ActiveRecord-specific implementation methods
+      
+      protected
+      
+      def cast_to_flow_class_if_needed
+        if self.class == ActiveDataFlow::ActiveRecord::DataFlow && flow_class != ActiveDataFlow::ActiveRecord::DataFlow
+          becomes(flow_class)
+        else
+          self
+        end
       end
-
-      def heartbeat_event
-        schedule_next_run
+      
+      def current_in_progress_run
+        data_flow_runs.in_progress.first
       end
-
-      def flow_class
-        name.camelize.constantize
+      
+      def update_next_source_id(last_id)
+        update(next_source_id: last_id)
+      end
+      
+      def update_run_cursors(run, first_id, last_id)
+        run.update(first_id: first_id, last_id: last_id)
       end
 
       private
       
-      def prepare_run
-        @source = rehydrate_connector(source)
-        @sink = rehydrate_connector(sink)
-        @runtime = rehydrate_runtime(runtime)
-      end
-
-      def rehydrate_connector(data)
-        return nil unless data
-        
-        klass_name = data['class_name']
-        unless klass_name
-          Rails.logger.warn "[ActiveDataFlow] Connector class name missing in data: #{data.inspect}"
-          return nil
-        end
-        
-        klass = klass_name.constantize
-        klass.from_json(data)
-      rescue NameError => e
-        Rails.logger.error "[ActiveDataFlow] Failed to load connector class: #{e.message}"
-        nil
+      def parsed_source
+        source
       end
       
-      def rehydrate_runtime(data)
-        return ActiveDataFlow::Runtime::Base.new unless data
-        
-        klass_name = data['class_name']
-        unless klass_name
-          Rails.logger.warn "[ActiveDataFlow] Runtime class name missing in data: #{data.inspect}"
-          return ActiveDataFlow::Runtime::Base.new
-        end
-        
-        klass = klass_name.constantize
-        klass.from_json(data)
-      rescue NameError => e
-        Rails.logger.error "[ActiveDataFlow] Failed to load runtime class: #{e.message}"
-        ActiveDataFlow::Runtime::Base.new
+      def parsed_sink
+        sink
+      end
+      
+      def parsed_runtime
+        runtime
       end
       
       def schedule_initial_run
@@ -216,17 +154,6 @@ module ActiveDataFlow
           # Cancel all pending runs
           data_flow_runs.pending.update_all(status: 'cancelled')
         end
-      end
-
-      # Override in subclasses to customize message ID extraction
-      def message_id(message)
-        message['id']
-      end
-
-      # Override in subclasses to implement collision detection
-      def transform_collision(message, transformed)
-        Rails.logger.debug("[DataFlow] Collision detection not implemented for this flow")
-        nil
       end
     end
   end

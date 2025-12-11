@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require_relative '../base_data_flow_run'
+
 module ActiveDataFlow
   module ActiveRecord
     class DataFlowRun < ::ActiveRecord::Base
+      include ActiveDataFlow::BaseDataFlowRun
+      
       self.table_name = "active_data_flow_data_flow_runs"
 
       # Associations
@@ -40,58 +44,7 @@ module ActiveDataFlow
         @_model_name ||= ActiveModel::Name.new(self, ActiveDataFlow, "data_flow_run")
       end
 
-      # Instance Methods
-      def duration
-        return nil unless started_at && ended_at
-        ended_at - started_at
-      end
-
-      def pending?
-        status == 'pending'
-      end
-
-      def in_progress?
-        status == 'in_progress'
-      end
-
-      def success?
-        status == 'success'
-      end
-
-      def failed?
-        status == 'failed'
-      end
-
-      def cancelled?
-        status == 'cancelled'
-      end
-
-      def completed?
-        success? || failed?
-      end
-
-      def due?
-        pending? && run_after <= Time.current
-      end
-
-      def overdue?
-        pending? && run_after <= 1.hour.ago
-      end
-
-      # Mark this run as started
-      def start!
-        data_flow.mark_run_started!(self)
-      end
-
-      # Mark this run as completed successfully
-      def complete!
-        data_flow.mark_run_completed!(self)
-      end
-
-      # Mark this run as failed
-      def fail!(error)
-        data_flow.mark_run_failed!(self, error)
-      end
+      # ActiveRecord-specific implementations are inherited from BaseDataFlowRun
     end
   end
 end

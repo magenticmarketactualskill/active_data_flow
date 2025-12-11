@@ -2,11 +2,13 @@
 # typed: false
 
 require 'sorbet-runtime'
+require_relative '../base_data_flow_run'
 
 module ActiveDataFlow
   module Redcord
     class DataFlowRun < T::Struct
       include ::Redcord::Base
+      include ActiveDataFlow::BaseDataFlowRun
 
       # Schema definition using Redcord's attribute method
       # Note: index: true automatically creates appropriate index type based on data type
@@ -72,57 +74,13 @@ module ActiveDataFlow
         pending.select { |run| run.run_after <= 1.hour.ago.to_i }
       end
 
-      # Instance Methods
-      def duration
-        return nil unless started_at && ended_at
-        ended_at - started_at
-      end
-
-      def pending?
-        status == 'pending'
-      end
-
-      def in_progress?
-        status == 'in_progress'
-      end
-
-      def success?
-        status == 'success'
-      end
-
-      def failed?
-        status == 'failed'
-      end
-
-      def cancelled?
-        status == 'cancelled'
-      end
-
-      def completed?
-        success? || failed?
-      end
-
-      def due?
-        pending? && run_after <= Time.current.to_i
-      end
-
-      def overdue?
-        pending? && run_after <= 1.hour.ago.to_i
-      end
-
-      # Mark this run as started
-      def start!
-        data_flow.mark_run_started!(self)
-      end
-
-      # Mark this run as completed successfully
-      def complete!
-        data_flow.mark_run_completed!(self)
-      end
-
-      # Mark this run as failed
-      def fail!(error)
-        data_flow.mark_run_failed!(self, error)
+      # Redcord-specific implementations
+      
+      protected
+      
+      def run_after_time
+        # Convert Unix timestamp to Time object for comparison
+        Time.at(run_after)
       end
     end
   end
